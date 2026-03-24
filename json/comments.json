@@ -1,0 +1,530 @@
+[
+    {
+        "id":  "seed_1",
+        "peliculaId":  "1",
+        "usuario":  "leche_galaxy",
+        "comentario":  "Me encanto el ritmo y el final.",
+        "vasosLeche":  3,
+        "fecha":  "2026-03-22T19:40:54.169Z"
+    },
+    {
+        "id":  "seed_2",
+        "peliculaId":  "1",
+        "usuario":  "moo_fan",
+        "comentario":  "Buena pero larga; merece paciencia.",
+        "vasosLeche":  5,
+        "fecha":  "2026-03-22T19:39:54.178Z"
+    },
+    {
+        "id":  "seed_3",
+        "peliculaId":  "1",
+        "usuario":  "palomitas_mx",
+        "comentario":  "No es para todos, pero a mi me atrapo.",
+        "vasosLeche":  2,
+        "fecha":  "2026-03-22T19:38:54.178Z"
+    },
+    {
+        "id":  "seed_4",
+        "peliculaId":  "2",
+        "usuario":  "moo_fan",
+        "comentario":  "Efectos e historia al mismo nivel.",
+        "vasosLeche":  2,
+        "fecha":  "2026-03-22T19:37:54.178Z"
+    },
+    {
+        "id":  "seed_5",
+        "peliculaId":  "2",
+        "usuario":  "palomitas_mx",
+        "comentario":  "Me dejo frio en algunas partes.",
+        "vasosLeche":  4,
+        "fecha":  "2026-03-22T19:36:54.178Z"
+    },
+    {
+        "id":  "seed_6",
+        "peliculaId":  "2",
+        "usuario":  "critico_leche",
+        "comentario":  "Personajes memorables y banda sonora top.",
+        "vasosLeche":  1,
+        "fecha":  "2026-03-22T19:35:54.178Z"
+    },
+    {
+        "id":  "seed_7",
+        "peliculaId":  "3",
+        "usuario":  "palomitas_mx",
+        "comentario":  "Recomendada en pantalla grande.",
+        "vasosLeche":  1,
+        "fecha":  "2026-03-22T19:34:54.178Z"
+    },
+    {
+        "id":  "seed_8",
+        "peliculaId":  "3",
+        "usuario":  "critico_leche",
+        "comentario":  "Prefiero la segunda entrega.",
+        "vasosLeche":  3,
+        "fecha":  "2026-03-22T19:33:54.178Z"
+    },
+    {
+        "id":  "seed_9",
+        "peliculaId":  "3",
+        "usuario":  "sillon_comodo",
+        "comentario":  "Un clasico que envejece bien.",
+        "vasosLeche":  5,
+        "fecha":  "2026-03-22T19:32:54.178Z"
+    },
+    {
+        "id":  "seed_10",
+        "peliculaId":  "4",
+        "usuario":  "critico_leche",
+        "comentario":  "Obra maestra, la volveria a ver mil veces.",
+        "vasosLeche":  5,
+        "fecha":  "2026-03-22T19:31:54.178Z"
+    },
+    {
+        "id":  "seed_11",
+        "peliculaId":  "4",
+        "usuario":  "sillon_comodo",
+        "comentario":  "Me encanto el ritmo y el final.",
+        "vasosLeche":  2,
+        "fecha":  "2026-03-22T19:30:54.178Z"
+    },
+    {
+        "id":  "seed_12",
+        "peliculaId":  "4",
+        "usuario":  "bluray_hd",
+        "comentario":  "Buena pero larga; merece paciencia.",
+        "vasosLeche":  4,
+        "fecha":  "2026-03-22T19:29:54.178Z"
+    },
+    {
+        "id":  "seed_13",
+        "peliculaId":  "5",
+        "usuario":  "sillon_comodo",
+        "comentario":  "No es para todos, pero a mi me atrapo.",
+        "vasosLeche":  4,
+        "fecha":  "2026-03-22T19:28:54.178Z"
+    },
+    {
+        "id":  "seed_14",
+        "peliculaId":  "5",
+        "usuario":  "bluray_hd",
+        "comentario":  "Efectos e historia al mismo nivel.",
+        "vasosLeche":  1,
+        "fecha":  "2026-03-22T19:27:54.178Z"
+    },
+    {
+        "id":  "seed_15",
+        "peliculaId":  "5",
+        "usuario":  "soundtrack_lover",
+        "comentario":  "Me dejo frio en algunas partes.",
+        "vasosLeche":  3,
+        "fecha":  "2026-03-22T19:26:54.179Z"
+    },
+    {
+        "id":  "seed_16",
+        "peliculaId":  "6",
+        "usuario":  "bluray_hd",
+        "comentario":  "Personajes memorables y banda sonora top.",
+        "vasosLeche":  3,
+        "fecha":  "2026-03-22T19:25:54.179Z"
+    },
+    {
+        "id":  "seed_17",
+        "peliculaId":  "6",
+        "usuario":  "soundtrack_lover",
+        "comentario":  "Recomendada en pantalla grande.",
+        "vasosLeche":  5,
+        "fecha":  "2026-03-22T19:24:54.179Z"
+    },
+    {
+        "id":  "seed_18",
+        "peliculaId":  "6",
+        "usuario":  "spoiler_alert",
+        "comentario":  "Prefiero la segunda entrega.",
+        "vasosLeche":  2,
+        "fecha":  "2026-03-22T19:23:54.179Z"
+    },
+    {
+        "id":  "seed_19",
+        "peliculaId":  "7",
+        "usuario":  "soundtrack_lover",
+        "comentario":  "Un clasico que envejece bien.",
+        "vasosLeche":  2,
+        "fecha":  "2026-03-22T19:22:54.179Z"
+    },
+    {
+        "id":  "seed_20",
+        "peliculaId":  "7",
+        "usuario":  "spoiler_alert",
+        "comentario":  "Obra maestra, la volveria a ver mil veces.",
+        "vasosLeche":  4,
+        "fecha":  "2026-03-22T19:21:54.179Z"
+    },
+    {
+        "id":  "seed_21",
+        "peliculaId":  "7",
+        "usuario":  "cinefilo_00",
+        "comentario":  "Me encanto el ritmo y el final.",
+        "vasosLeche":  1,
+        "fecha":  "2026-03-22T19:20:54.179Z"
+    },
+    {
+        "id":  "seed_22",
+        "peliculaId":  "8",
+        "usuario":  "spoiler_alert",
+        "comentario":  "Buena pero larga; merece paciencia.",
+        "vasosLeche":  1,
+        "fecha":  "2026-03-22T19:19:54.179Z"
+    },
+    {
+        "id":  "seed_23",
+        "peliculaId":  "8",
+        "usuario":  "cinefilo_00",
+        "comentario":  "No es para todos, pero a mi me atrapo.",
+        "vasosLeche":  3,
+        "fecha":  "2026-03-22T19:18:54.179Z"
+    },
+    {
+        "id":  "seed_24",
+        "peliculaId":  "8",
+        "usuario":  "maraton_nocturno",
+        "comentario":  "Efectos e historia al mismo nivel.",
+        "vasosLeche":  5,
+        "fecha":  "2026-03-22T19:17:54.179Z"
+    },
+    {
+        "id":  "seed_25",
+        "peliculaId":  "9",
+        "usuario":  "cinefilo_00",
+        "comentario":  "Me dejo frio en algunas partes.",
+        "vasosLeche":  5,
+        "fecha":  "2026-03-22T19:16:54.179Z"
+    },
+    {
+        "id":  "seed_26",
+        "peliculaId":  "9",
+        "usuario":  "maraton_nocturno",
+        "comentario":  "Personajes memorables y banda sonora top.",
+        "vasosLeche":  2,
+        "fecha":  "2026-03-22T19:15:54.179Z"
+    },
+    {
+        "id":  "seed_27",
+        "peliculaId":  "9",
+        "usuario":  "director_sofa",
+        "comentario":  "Recomendada en pantalla grande.",
+        "vasosLeche":  4,
+        "fecha":  "2026-03-22T19:14:54.179Z"
+    },
+    {
+        "id":  "seed_28",
+        "peliculaId":  "10",
+        "usuario":  "maraton_nocturno",
+        "comentario":  "Prefiero la segunda entrega.",
+        "vasosLeche":  4,
+        "fecha":  "2026-03-22T19:13:54.179Z"
+    },
+    {
+        "id":  "seed_29",
+        "peliculaId":  "10",
+        "usuario":  "director_sofa",
+        "comentario":  "Un clasico que envejece bien.",
+        "vasosLeche":  1,
+        "fecha":  "2026-03-22T19:12:54.179Z"
+    },
+    {
+        "id":  "seed_30",
+        "peliculaId":  "10",
+        "usuario":  "pop_corn_king",
+        "comentario":  "Obra maestra, la volveria a ver mil veces.",
+        "vasosLeche":  3,
+        "fecha":  "2026-03-22T19:11:54.180Z"
+    },
+    {
+        "id":  "seed_31",
+        "peliculaId":  "11",
+        "usuario":  "director_sofa",
+        "comentario":  "Me encanto el ritmo y el final.",
+        "vasosLeche":  3,
+        "fecha":  "2026-03-22T19:10:54.180Z"
+    },
+    {
+        "id":  "seed_32",
+        "peliculaId":  "11",
+        "usuario":  "pop_corn_king",
+        "comentario":  "Buena pero larga; merece paciencia.",
+        "vasosLeche":  5,
+        "fecha":  "2026-03-22T19:09:54.180Z"
+    },
+    {
+        "id":  "seed_33",
+        "peliculaId":  "11",
+        "usuario":  "matinee_sol",
+        "comentario":  "No es para todos, pero a mi me atrapo.",
+        "vasosLeche":  2,
+        "fecha":  "2026-03-22T19:08:54.180Z"
+    },
+    {
+        "id":  "seed_34",
+        "peliculaId":  "12",
+        "usuario":  "pop_corn_king",
+        "comentario":  "Efectos e historia al mismo nivel.",
+        "vasosLeche":  2,
+        "fecha":  "2026-03-22T19:07:54.180Z"
+    },
+    {
+        "id":  "seed_35",
+        "peliculaId":  "12",
+        "usuario":  "matinee_sol",
+        "comentario":  "Me dejo frio en algunas partes.",
+        "vasosLeche":  4,
+        "fecha":  "2026-03-22T19:06:54.180Z"
+    },
+    {
+        "id":  "seed_36",
+        "peliculaId":  "12",
+        "usuario":  "subtitulos_ok",
+        "comentario":  "Personajes memorables y banda sonora top.",
+        "vasosLeche":  1,
+        "fecha":  "2026-03-22T19:05:54.180Z"
+    },
+    {
+        "id":  "seed_37",
+        "peliculaId":  "13",
+        "usuario":  "matinee_sol",
+        "comentario":  "Recomendada en pantalla grande.",
+        "vasosLeche":  1,
+        "fecha":  "2026-03-22T19:04:54.180Z"
+    },
+    {
+        "id":  "seed_38",
+        "peliculaId":  "13",
+        "usuario":  "subtitulos_ok",
+        "comentario":  "Prefiero la segunda entrega.",
+        "vasosLeche":  3,
+        "fecha":  "2026-03-22T19:03:54.180Z"
+    },
+    {
+        "id":  "seed_39",
+        "peliculaId":  "13",
+        "usuario":  "imax_dream",
+        "comentario":  "Un clasico que envejece bien.",
+        "vasosLeche":  5,
+        "fecha":  "2026-03-22T19:02:54.180Z"
+    },
+    {
+        "id":  "seed_40",
+        "peliculaId":  "14",
+        "usuario":  "subtitulos_ok",
+        "comentario":  "Obra maestra, la volveria a ver mil veces.",
+        "vasosLeche":  5,
+        "fecha":  "2026-03-22T19:01:54.180Z"
+    },
+    {
+        "id":  "seed_41",
+        "peliculaId":  "14",
+        "usuario":  "imax_dream",
+        "comentario":  "Me encanto el ritmo y el final.",
+        "vasosLeche":  2,
+        "fecha":  "2026-03-22T19:00:54.180Z"
+    },
+    {
+        "id":  "seed_42",
+        "peliculaId":  "14",
+        "usuario":  "festival_moo",
+        "comentario":  "Buena pero larga; merece paciencia.",
+        "vasosLeche":  4,
+        "fecha":  "2026-03-22T18:59:54.180Z"
+    },
+    {
+        "id":  "seed_43",
+        "peliculaId":  "15",
+        "usuario":  "imax_dream",
+        "comentario":  "No es para todos, pero a mi me atrapo.",
+        "vasosLeche":  4,
+        "fecha":  "2026-03-22T18:58:54.180Z"
+    },
+    {
+        "id":  "seed_44",
+        "peliculaId":  "15",
+        "usuario":  "festival_moo",
+        "comentario":  "Efectos e historia al mismo nivel.",
+        "vasosLeche":  1,
+        "fecha":  "2026-03-22T18:57:54.180Z"
+    },
+    {
+        "id":  "seed_45",
+        "peliculaId":  "15",
+        "usuario":  "rollo_camara",
+        "comentario":  "Me dejo frio en algunas partes.",
+        "vasosLeche":  3,
+        "fecha":  "2026-03-22T18:56:54.180Z"
+    },
+    {
+        "id":  "seed_46",
+        "peliculaId":  "16",
+        "usuario":  "festival_moo",
+        "comentario":  "Personajes memorables y banda sonora top.",
+        "vasosLeche":  3,
+        "fecha":  "2026-03-22T18:55:54.181Z"
+    },
+    {
+        "id":  "seed_47",
+        "peliculaId":  "16",
+        "usuario":  "rollo_camara",
+        "comentario":  "Recomendada en pantalla grande.",
+        "vasosLeche":  5,
+        "fecha":  "2026-03-22T18:54:54.181Z"
+    },
+    {
+        "id":  "seed_48",
+        "peliculaId":  "16",
+        "usuario":  "claqueta_azul",
+        "comentario":  "Prefiero la segunda entrega.",
+        "vasosLeche":  2,
+        "fecha":  "2026-03-22T18:53:54.181Z"
+    },
+    {
+        "id":  "seed_49",
+        "peliculaId":  "17",
+        "usuario":  "rollo_camara",
+        "comentario":  "Un clasico que envejece bien.",
+        "vasosLeche":  2,
+        "fecha":  "2026-03-22T18:52:54.181Z"
+    },
+    {
+        "id":  "seed_50",
+        "peliculaId":  "17",
+        "usuario":  "claqueta_azul",
+        "comentario":  "Obra maestra, la volveria a ver mil veces.",
+        "vasosLeche":  4,
+        "fecha":  "2026-03-22T18:51:54.181Z"
+    },
+    {
+        "id":  "seed_51",
+        "peliculaId":  "17",
+        "usuario":  "creditos_finales",
+        "comentario":  "Me encanto el ritmo y el final.",
+        "vasosLeche":  1,
+        "fecha":  "2026-03-22T18:50:54.181Z"
+    },
+    {
+        "id":  "seed_52",
+        "peliculaId":  "18",
+        "usuario":  "claqueta_azul",
+        "comentario":  "Buena pero larga; merece paciencia.",
+        "vasosLeche":  1,
+        "fecha":  "2026-03-22T18:49:54.181Z"
+    },
+    {
+        "id":  "seed_53",
+        "peliculaId":  "18",
+        "usuario":  "creditos_finales",
+        "comentario":  "No es para todos, pero a mi me atrapo.",
+        "vasosLeche":  3,
+        "fecha":  "2026-03-22T18:48:54.181Z"
+    },
+    {
+        "id":  "seed_54",
+        "peliculaId":  "18",
+        "usuario":  "cine_vaca",
+        "comentario":  "Efectos e historia al mismo nivel.",
+        "vasosLeche":  5,
+        "fecha":  "2026-03-22T18:47:54.181Z"
+    },
+    {
+        "id":  "seed_55",
+        "peliculaId":  "19",
+        "usuario":  "creditos_finales",
+        "comentario":  "Me dejo frio en algunas partes.",
+        "vasosLeche":  5,
+        "fecha":  "2026-03-22T18:46:54.181Z"
+    },
+    {
+        "id":  "seed_56",
+        "peliculaId":  "19",
+        "usuario":  "cine_vaca",
+        "comentario":  "Personajes memorables y banda sonora top.",
+        "vasosLeche":  2,
+        "fecha":  "2026-03-22T18:45:54.181Z"
+    },
+    {
+        "id":  "seed_57",
+        "peliculaId":  "19",
+        "usuario":  "leche_galaxy",
+        "comentario":  "Recomendada en pantalla grande.",
+        "vasosLeche":  4,
+        "fecha":  "2026-03-22T18:44:54.181Z"
+    },
+    {
+        "id":  "seed_58",
+        "peliculaId":  "20",
+        "usuario":  "cine_vaca",
+        "comentario":  "Prefiero la segunda entrega.",
+        "vasosLeche":  4,
+        "fecha":  "2026-03-22T18:43:54.181Z"
+    },
+    {
+        "id":  "seed_59",
+        "peliculaId":  "20",
+        "usuario":  "leche_galaxy",
+        "comentario":  "Un clasico que envejece bien.",
+        "vasosLeche":  1,
+        "fecha":  "2026-03-22T18:42:54.181Z"
+    },
+    {
+        "id":  "seed_60",
+        "peliculaId":  "20",
+        "usuario":  "moo_fan",
+        "comentario":  "Obra maestra, la volveria a ver mil veces.",
+        "vasosLeche":  3,
+        "fecha":  "2026-03-22T18:41:54.181Z"
+    },
+    {
+        "id":  "seed_61",
+        "peliculaId":  "21",
+        "usuario":  "leche_galaxy",
+        "comentario":  "Me encanto el ritmo y el final.",
+        "vasosLeche":  3,
+        "fecha":  "2026-03-22T18:40:54.182Z"
+    },
+    {
+        "id":  "seed_62",
+        "peliculaId":  "21",
+        "usuario":  "moo_fan",
+        "comentario":  "Buena pero larga; merece paciencia.",
+        "vasosLeche":  5,
+        "fecha":  "2026-03-22T18:39:54.182Z"
+    },
+    {
+        "id":  "seed_63",
+        "peliculaId":  "21",
+        "usuario":  "palomitas_mx",
+        "comentario":  "No es para todos, pero a mi me atrapo.",
+        "vasosLeche":  2,
+        "fecha":  "2026-03-22T18:38:54.182Z"
+    },
+    {
+        "id":  "seed_64",
+        "peliculaId":  "22",
+        "usuario":  "moo_fan",
+        "comentario":  "Efectos e historia al mismo nivel.",
+        "vasosLeche":  2,
+        "fecha":  "2026-03-22T18:37:54.182Z"
+    },
+    {
+        "id":  "seed_65",
+        "peliculaId":  "22",
+        "usuario":  "palomitas_mx",
+        "comentario":  "Me dejo frio en algunas partes.",
+        "vasosLeche":  4,
+        "fecha":  "2026-03-22T18:36:54.182Z"
+    },
+    {
+        "id":  "seed_66",
+        "peliculaId":  "22",
+        "usuario":  "critico_leche",
+        "comentario":  "Personajes memorables y banda sonora top.",
+        "vasosLeche":  1,
+        "fecha":  "2026-03-22T18:35:54.182Z"
+    }
+]

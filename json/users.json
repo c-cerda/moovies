@@ -1,0 +1,22 @@
+[
+  {"id": "u_01", "nombreUsuario": "cine_vaca", "nombre": "Cine Vaca", "email": "cine.vaca@moovies.local", "lecheFavorita": "Entera", "password": "moo123"},
+  {"id": "u_02", "nombreUsuario": "leche_galaxy", "nombre": "Leche Galaxy", "email": "galaxy@moovies.local", "lecheFavorita": "Deslactosada", "password": "moo123"},
+  {"id": "u_03", "nombreUsuario": "moo_fan", "nombre": "Moo Fan", "email": "moofan@moovies.local", "lecheFavorita": "Almendra", "password": "moo123"},
+  {"id": "u_04", "nombreUsuario": "palomitas_mx", "nombre": "Palomitas MX", "email": "palomitas@moovies.local", "lecheFavorita": "Entera", "password": "moo123"},
+  {"id": "u_05", "nombreUsuario": "critico_leche", "nombre": "Crítico Leche", "email": "critico@moovies.local", "lecheFavorita": "Deslactosada", "password": "moo123"},
+  {"id": "u_06", "nombreUsuario": "sillon_comodo", "nombre": "Sillón Cómodo", "email": "sillon@moovies.local", "lecheFavorita": "Entera", "password": "moo123"},
+  {"id": "u_07", "nombreUsuario": "bluray_hd", "nombre": "Blu-ray HD", "email": "bluray@moovies.local", "lecheFavorita": "Almendra", "password": "moo123"},
+  {"id": "u_08", "nombreUsuario": "soundtrack_lover", "nombre": "Soundtrack Lover", "email": "ost@moovies.local", "lecheFavorita": "Entera", "password": "moo123"},
+  {"id": "u_09", "nombreUsuario": "spoiler_alert", "nombre": "Spoiler Alert", "email": "spoiler@moovies.local", "lecheFavorita": "Deslactosada", "password": "moo123"},
+  {"id": "u_10", "nombreUsuario": "cinefilo_00", "nombre": "Cinéfilo 00", "email": "cinefilo@moovies.local", "lecheFavorita": "Entera", "password": "moo123"},
+  {"id": "u_11", "nombreUsuario": "maraton_nocturno", "nombre": "Maratón Nocturno", "email": "maraton@moovies.local", "lecheFavorita": "Almendra", "password": "moo123"},
+  {"id": "u_12", "nombreUsuario": "director_sofa", "nombre": "Director Sofá", "email": "sofa@moovies.local", "lecheFavorita": "Entera", "password": "moo123"},
+  {"id": "u_13", "nombreUsuario": "pop_corn_king", "nombre": "Pop Corn King", "email": "pop@moovies.local", "lecheFavorita": "Deslactosada", "password": "moo123"},
+  {"id": "u_14", "nombreUsuario": "matinee_sol", "nombre": "Matinee Sol", "email": "matinee@moovies.local", "lecheFavorita": "Entera", "password": "moo123"},
+  {"id": "u_15", "nombreUsuario": "subtitulos_ok", "nombre": "Subtítulos OK", "email": "subs@moovies.local", "lecheFavorita": "Almendra", "password": "moo123"},
+  {"id": "u_16", "nombreUsuario": "imax_dream", "nombre": "IMAX Dream", "email": "imax@moovies.local", "lecheFavorita": "Entera", "password": "moo123"},
+  {"id": "u_17", "nombreUsuario": "festival_moo", "nombre": "Festival Moo", "email": "festival@moovies.local", "lecheFavorita": "Deslactosada", "password": "moo123"},
+  {"id": "u_18", "nombreUsuario": "rollo_camara", "nombre": "Rollo Cámara", "email": "rollo@moovies.local", "lecheFavorita": "Entera", "password": "moo123"},
+  {"id": "u_19", "nombreUsuario": "claqueta_azul", "nombre": "Claqueta Azul", "email": "claqueta@moovies.local", "lecheFavorita": "Almendra", "password": "moo123"},
+  {"id": "u_20", "nombreUsuario": "creditos_finales", "nombre": "Créditos Finales", "email": "creditos@moovies.local", "lecheFavorita": "Entera", "password": "moo123"}
+]
