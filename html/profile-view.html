@@ -1,118 +1,121 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MOOVIES - Perfil</title>
-    <link rel="stylesheet" href="../CSS/styles.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>MOOVIES - Perfil</title>
+	<link rel="stylesheet" href="../css/styles.css">
 </head>
+
 <body class="profile-page-body">
-    <header>
-        <a href="catalog.html" class="header-logo">
-            <img src="../MOO/MOOVIES_icon.png" alt="Logo">
-        </a>
-        <a href="catalog.html" class="profile-back-link">← Volver al catálogo</a>
-    </header>
-    <main class="profile-page-main">
-        <p id="profileViewError" class="catalog-error" hidden></p>
-        <div id="profileViewContent" hidden>
-            <h1 class="profile-page-title" id="profileViewHeading">Perfil</h1>
-            <div class="profile-header-block profile-header-block--public">
-                <p><strong>Usuario:</strong> <span id="pvUsername"></span></p>
-                <p><strong>Leche favorita:</strong> <span id="pvLeche"></span></p>
-                <p><strong>Descripción:</strong></p>
-                <p id="pvDescripcion" class="profile-public-desc"></p>
-            </div>
-            <h2 class="profile-section-title">Reseñas</h2>
-            <div id="pvReviews" class="profile-review-cards"></div>
-        </div>
-    </main>
-    <script src="../JavaScript/seed-data.js"></script>
-    <script src="../JavaScript/storage.js"></script>
-    <script>
-        (function () {
-            function parseUserParam() {
-                var q = window.location.search;
-                var m = q.match(/[?&]user=([^&]+)/);
-                if (m) {
-                    try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; }
-                }
-                var fromLs = localStorage.getItem('moovies_open_profile_username');
-                if (fromLs) {
-                    localStorage.removeItem('moovies_open_profile_username');
-                    return fromLs;
-                }
-                return '';
-            }
+	<header>
+		<a href="catalog.html" class="header-logo">
+			<img src="../moo/MOOVIES_icon.png" alt="Logo">
+		</a>
+		<a href="catalog.html" class="profile-back-link">← Volver al catálogo</a>
+	</header>
+	<main class="profile-page-main">
+		<p id="profileViewError" class="catalog-error" hidden></p>
+		<div id="profileViewContent" hidden>
+			<h1 class="profile-page-title" id="profileViewHeading">Perfil</h1>
+			<div class="profile-header-block profile-header-block--public">
+				<p><strong>Usuario:</strong> <span id="pvUsername"></span></p>
+				<p><strong>Leche favorita:</strong> <span id="pvLeche"></span></p>
+				<p><strong>Descripción:</strong></p>
+				<p id="pvDescripcion" class="profile-public-desc"></p>
+			</div>
+			<h2 class="profile-section-title">Reseñas</h2>
+			<div id="pvReviews" class="profile-review-cards"></div>
+		</div>
+	</main>
+	<script src="../js/seed-data.js"></script>
+	<script src="../js/storage.js"></script>
+	<script>
+		(function () {
+			function parseUserParam() {
+				var q = window.location.search;
+				var m = q.match(/[?&]user=([^&]+)/);
+				if (m) {
+					try {return decodeURIComponent(m[1]);} catch (e) {return m[1];}
+				}
+				var fromLs = localStorage.getItem('moovies_open_profile_username');
+				if (fromLs) {
+					localStorage.removeItem('moovies_open_profile_username');
+					return fromLs;
+				}
+				return '';
+			}
 
-            function escapeHtml(text) {
-                var div = document.createElement('div');
-                div.textContent = text == null ? '' : String(text);
-                return div.innerHTML;
-            }
+			function escapeHtml(text) {
+				var div = document.createElement('div');
+				div.textContent = text == null ? '' : String(text);
+				return div.innerHTML;
+			}
 
-            function milkBottlesHTML(count) {
-                var n = Math.max(0, Math.min(5, parseInt(count, 10) || 0));
-                return '<span class="milk-bottles" aria-label="' + n + ' vasos">' + '🥛'.repeat(n) + '</span>';
-            }
+			function milkBottlesHTML(count) {
+				var n = Math.max(0, Math.min(5, parseInt(count, 10) || 0));
+				return '<span class="milk-bottles" aria-label="' + n + ' vasos">' + '🥛'.repeat(n) + '</span>';
+			}
 
-            function movieTitleById(movies, id) {
-                var pid = String(id);
-                for (var i = 0; i < movies.length; i++) {
-                    if (String(movies[i].id) === pid) return movies[i].titulo || pid;
-                }
-                return 'Película #' + pid;
-            }
+			function movieTitleById(movies, id) {
+				var pid = String(id);
+				for (var i = 0; i < movies.length; i++) {
+					if (String(movies[i].id) === pid) return movies[i].titulo || pid;
+				}
+				return 'Película #' + pid;
+			}
 
-            document.addEventListener('DOMContentLoaded', function () {
-                var errEl = document.getElementById('profileViewError');
-                var content = document.getElementById('profileViewContent');
-                var username = parseUserParam().trim();
-                if (!username) {
-                    errEl.textContent = 'No se indicó un usuario.';
-                    errEl.hidden = false;
-                    return;
-                }
-                MooviesStorage.ensureLocalJsonSeed().then(function () {
-                    var user = MooviesStorage.getUserRecordByUsername(username);
-                    if (!user) {
-                        errEl.textContent = 'No se encontró ese usuario.';
-                        errEl.hidden = false;
-                        return;
-                    }
-                    var movies = (window.MOOVIES_SEED && window.MOOVIES_SEED.movies) ? window.MOOVIES_SEED.movies : [];
-                    document.getElementById('profileViewHeading').textContent = 'Perfil de @' + escapeHtml(user.nombreUsuario);
-                    document.getElementById('pvUsername').textContent = user.nombreUsuario;
-                    document.getElementById('pvLeche').textContent = user.lecheFavorita || '—';
-                    var desc = user.descripcion != null && String(user.descripcion).trim() !== '';
-                    document.getElementById('pvDescripcion').textContent = desc ? user.descripcion : '(Sin descripción)';
-                    var comments = MooviesStorage.getComments().filter(function (c) {
-                        return c && String(c.usuario).toLowerCase() === String(user.nombreUsuario).toLowerCase();
-                    });
-                    comments.sort(function (a, b) {
-                        var ta = a.fecha ? Date.parse(a.fecha) : 0;
-                        var tb = b.fecha ? Date.parse(b.fecha) : 0;
-                        return tb - ta;
-                    });
-                    var box = document.getElementById('pvReviews');
-                    box.innerHTML = '';
-                    if (comments.length === 0) {
-                        box.innerHTML = '<p class="comments-empty">Este usuario aún no ha reseñado películas.</p>';
-                    } else {
-                        comments.forEach(function (c) {
-                            var card = document.createElement('article');
-                            card.className = 'profile-review-card';
-                            card.innerHTML =
-                                '<h4>' + escapeHtml(movieTitleById(movies, c.peliculaId)) + '</h4>' +
-                                '<div class="profile-review-card__meta">' + milkBottlesHTML(c.vasosLeche) + '</div>' +
-                                '<p class="profile-review-card__text">' + escapeHtml(c.comentario) + '</p>';
-                            box.appendChild(card);
-                        });
-                    }
-                    content.hidden = false;
-                });
-            });
-        })();
-    </script>
+			document.addEventListener('DOMContentLoaded', function () {
+				var errEl = document.getElementById('profileViewError');
+				var content = document.getElementById('profileViewContent');
+				var username = parseUserParam().trim();
+				if (!username) {
+					errEl.textContent = 'No se indicó un usuario.';
+					errEl.hidden = false;
+					return;
+				}
+				MooviesStorage.ensureLocalJsonSeed().then(function () {
+					var user = MooviesStorage.getUserRecordByUsername(username);
+					if (!user) {
+						errEl.textContent = 'No se encontró ese usuario.';
+						errEl.hidden = false;
+						return;
+					}
+					var movies = (window.MOOVIES_SEED && window.MOOVIES_SEED.movies) ? window.MOOVIES_SEED.movies : [];
+					document.getElementById('profileViewHeading').textContent = 'Perfil de @' + escapeHtml(user.nombreUsuario);
+					document.getElementById('pvUsername').textContent = user.nombreUsuario;
+					document.getElementById('pvLeche').textContent = user.lecheFavorita || '—';
+					var desc = user.descripcion != null && String(user.descripcion).trim() !== '';
+					document.getElementById('pvDescripcion').textContent = desc ? user.descripcion : '(Sin descripción)';
+					var comments = MooviesStorage.getComments().filter(function (c) {
+						return c && String(c.usuario).toLowerCase() === String(user.nombreUsuario).toLowerCase();
+					});
+					comments.sort(function (a, b) {
+						var ta = a.fecha ? Date.parse(a.fecha) : 0;
+						var tb = b.fecha ? Date.parse(b.fecha) : 0;
+						return tb - ta;
+					});
+					var box = document.getElementById('pvReviews');
+					box.innerHTML = '';
+					if (comments.length === 0) {
+						box.innerHTML = '<p class="comments-empty">Este usuario aún no ha reseñado películas.</p>';
+					} else {
+						comments.forEach(function (c) {
+							var card = document.createElement('article');
+							card.className = 'profile-review-card';
+							card.innerHTML =
+								'<h4>' + escapeHtml(movieTitleById(movies, c.peliculaId)) + '</h4>' +
+								'<div class="profile-review-card__meta">' + milkBottlesHTML(c.vasosLeche) + '</div>' +
+								'<p class="profile-review-card__text">' + escapeHtml(c.comentario) + '</p>';
+							box.appendChild(card);
+						});
+					}
+					content.hidden = false;
+				});
+			});
+		})();
+	</script>
 </body>
+
 </html>

@@ -1,97 +1,107 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Moovies - Registro</title>
-    <link rel="stylesheet" href="../CSS/styles.css">
+	<meta charset="UTF-8">
+	<title>Moovies - Registro</title>
+	<link rel="stylesheet" href="../css/styles.css">
 </head>
+
 <body>
-    <div class="auth-wrapper">
-        <div class="auth-container">
-            <div class="auth-form">
-                <h2>Crea tu Perfil</h2>
-                <p id="authMessage" class="auth-message" hidden></p>
-                <form id="registerForm" novalidate>
-                    <input type="text" id="regNombreUsuario" name="nombreUsuario" placeholder="Nombre de usuario (único, ej. moo_cine)" required autocomplete="username" pattern="[a-zA-Z0-9_-]{3,24}" title="Letras, números, guiones y guión bajo. 3 a 24 caracteres.">
-                    <input type="text" id="regNombre" name="nombre" placeholder="Nombre para mostrar" required>
-                    <input type="email" id="regEmail" name="email" placeholder="Correo electrónico" required autocomplete="email">
-                    <select id="regLeche" name="leche" aria-label="Leche favorita">
-                        <option value="Entera">Leche favorita: Entera</option>
-                        <option value="Deslactosada">Leche favorita: Deslactosada</option>
-                        <option value="Almendra">Leche favorita: Almendra</option>
-                    </select>
-                    <input type="password" id="regPassword" name="password" placeholder="Contraseña" required autocomplete="new-password" minlength="4">
-                    <button type="submit" class="btn-moo">¡Muu-gistrarse!</button>
-                </form>
-                <p style="text-align:center; margin-top:20px;">
-                    ¿Ya tienes cuenta? <a href="login.html" style="color:var(--azul-fuerte); font-weight:bold;">Inicia sesión</a>
-                </p>
-            </div>
-            <div class="auth-image">
-                <img src="../MOO/MOOVIES_LOGO.png" alt="Logo">
-            </div>
-        </div>
-    </div>
-    <script src="../JavaScript/seed-data.js"></script>
-    <script src="../JavaScript/storage.js"></script>
-    <script>
-        (function () {
-            var form = document.getElementById('registerForm');
-            var msg = document.getElementById('authMessage');
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
-                msg.hidden = true;
-                var nombreUsuario = document.getElementById('regNombreUsuario').value.trim();
-                var nombre = document.getElementById('regNombre').value.trim();
-                var email = document.getElementById('regEmail').value.trim();
-                var leche = document.getElementById('regLeche').value;
-                var password = document.getElementById('regPassword').value;
-                if (password.length < 4) {
-                    msg.textContent = 'La contraseña debe tener al menos 4 caracteres';
-                    msg.hidden = false;
-                    return;
-                }
-                if (nombreUsuario.length < 3) {
-                    msg.textContent = 'El nombre de usuario debe tener al menos 3 caracteres';
-                    msg.hidden = false;
-                    return;
-                }
-                MooviesStorage.ensureLocalJsonSeed().then(function () {
-                    var users = MooviesStorage.getUsers();
-                    var nuLower = nombreUsuario.toLowerCase();
-                    var elower = email.toLowerCase();
-                    for (var i = 0; i < users.length; i++) {
-                        if (users[i].nombreUsuario && String(users[i].nombreUsuario).toLowerCase() === nuLower) {
-                            msg.textContent = 'Ese nombre de usuario ya está en uso';
-                            msg.hidden = false;
-                            return;
-                        }
-                        if (users[i].email && String(users[i].email).toLowerCase() === elower) {
-                            msg.textContent = 'Ese correo ya está registrado';
-                            msg.hidden = false;
-                            return;
-                        }
-                    }
-                    var newUser = {
-                        id: 'u_' + Date.now().toString(36),
-                        nombreUsuario: nombreUsuario,
-                        nombre: nombre,
-                        email: email,
-                        lecheFavorita: leche,
-                        password: password,
-                        descripcion: '',
-                    };
-                    users.push(newUser);
-                    MooviesStorage.saveUsers(users);
-                    MooviesStorage.setSessionUser({
-                        nombreUsuario: nombreUsuario,
-                        nombre: nombre,
-                        email: email,
-                    });
-                    window.location.href = 'catalog.html';
-                });
-            });
-        })();
-    </script>
+	<div class="auth-wrapper">
+		<div class="auth-container">
+			<div class="auth-form">
+				<h2>Crea tu Perfil</h2>
+				<p id="authMessage" class="auth-message" hidden></p>
+				<form id="registerForm" novalidate>
+					<input type="text" id="regNombreUsuario" name="nombreUsuario"
+						placeholder="Nombre de usuario (único, ej. moo_cine)" required
+						autocomplete="username" pattern="[a-zA-Z0-9_-]{3,24}"
+						title="Letras, números, guiones y guión bajo. 3 a 24 caracteres.">
+					<input type="text" id="regNombre" name="nombre"
+						placeholder="Nombre para mostrar" required>
+					<input type="email" id="regEmail" name="email" placeholder="Correo electrónico"
+						required autocomplete="email">
+					<select id="regLeche" name="leche" aria-label="Leche favorita">
+						<option value="Entera">Leche favorita: Entera</option>
+						<option value="Deslactosada">Leche favorita: Deslactosada</option>
+						<option value="Almendra">Leche favorita: Almendra</option>
+					</select>
+					<input type="password" id="regPassword" name="password" placeholder="Contraseña"
+						required autocomplete="new-password" minlength="4">
+					<button type="submit" class="btn-moo">¡Muu-gistrarse!</button>
+				</form>
+				<p style="text-align:center; margin-top:20px;">
+					¿Ya tienes cuenta? <a href="login.html"
+						style="color:var(--azul-fuerte); font-weight:bold;">Inicia sesión</a>
+				</p>
+			</div>
+			<div class="auth-image">
+				<img src="../moo/MOOVIES_LOGO.png" alt="Logo">
+			</div>
+		</div>
+	</div>
+	<script src="../js/seed-data.js"></script>
+	<script src="../js/storage.js"></script>
+	<script>
+		(function () {
+			var form = document.getElementById('registerForm');
+			var msg = document.getElementById('authMessage');
+			form.addEventListener('submit', function (e) {
+				e.preventDefault();
+				msg.hidden = true;
+				var nombreUsuario = document.getElementById('regNombreUsuario').value.trim();
+				var nombre = document.getElementById('regNombre').value.trim();
+				var email = document.getElementById('regEmail').value.trim();
+				var leche = document.getElementById('regLeche').value;
+				var password = document.getElementById('regPassword').value;
+				if (password.length < 4) {
+					msg.textContent = 'La contraseña debe tener al menos 4 caracteres';
+					msg.hidden = false;
+					return;
+				}
+				if (nombreUsuario.length < 3) {
+					msg.textContent = 'El nombre de usuario debe tener al menos 3 caracteres';
+					msg.hidden = false;
+					return;
+				}
+				MooviesStorage.ensureLocalJsonSeed().then(function () {
+					var users = MooviesStorage.getUsers();
+					var nuLower = nombreUsuario.toLowerCase();
+					var elower = email.toLowerCase();
+					for (var i = 0; i < users.length; i++) {
+						if (users[i].nombreUsuario && String(users[i].nombreUsuario).toLowerCase() === nuLower) {
+							msg.textContent = 'Ese nombre de usuario ya está en uso';
+							msg.hidden = false;
+							return;
+						}
+						if (users[i].email && String(users[i].email).toLowerCase() === elower) {
+							msg.textContent = 'Ese correo ya está registrado';
+							msg.hidden = false;
+							return;
+						}
+					}
+					var newUser = {
+						id: 'u_' + Date.now().toString(36),
+						nombreUsuario: nombreUsuario,
+						nombre: nombre,
+						email: email,
+						lecheFavorita: leche,
+						password: password,
+						descripcion: '',
+					};
+					users.push(newUser);
+					MooviesStorage.saveUsers(users);
+					MooviesStorage.setSessionUser({
+						nombreUsuario: nombreUsuario,
+						nombre: nombre,
+						email: email,
+					});
+					window.location.href = 'catalog.html';
+				});
+			});
+		})();
+	</script>
 </body>
+
 </html>
