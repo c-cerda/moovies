@@ -1,6 +1,9 @@
 /**
- * Persistencia local + exportación por descarga (file:// no puede escribir en disco).
- * Comentarios: votos (like/dislike), respuestas anidadas.
+ * Persistencia local (solo navegador): los comentarios se guardan como el mismo array
+ * que define json/comments.json, pero en localStorage (clave: moovies_comments_v6).
+ * JavaScript en el cliente no puede sobrescribir archivos .json del proyecto en disco
+ * sin descarga ni servidor; por eso no hay PHP ni escritura directa a json/comments.json.
+ * Opcional: MooviesStorage.downloadJsonFile() para respaldo manual.
  */
 (function (global) {
     var K_USERS = 'moovies_users_v4';
@@ -59,7 +62,6 @@
 
     function saveUsers(users) {
         localStorage.setItem(K_USERS, JSON.stringify(users));
-        downloadJsonFile('users.json', users);
     }
 
     function getComments() {
@@ -69,9 +71,9 @@
         });
     }
 
+    /** Guarda el array de comentarios (misma forma que json/comments.json) solo en localStorage. */
     function saveComments(comments) {
         localStorage.setItem(K_COMMENTS, JSON.stringify(comments));
-        downloadJsonFile('comments.json', comments);
     }
 
     function getFavoritesMap() {
