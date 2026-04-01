@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>MOOVIES - Catálogo</title>
-    <link rel="stylesheet" href="../CSS/styles.css">
+    <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
     <header>
         <a href="index.html" class="header-logo">
-            <img src="../MOO/MOOVIES_icon.png" alt="Logo">
+            <img src="../moo/MOOVIES_icon.png" alt="Logo">
         </a>
         <div class="user-menu">
             <div class="user-info" id="userGreeting" onclick="toggleMenu()">Hola, Cineasta ▼</div>
@@ -88,6 +88,8 @@
             </div>
             <h3 class="profile-section-title">Películas que has reseñado</h3>
             <div id="profileMyReviews" class="profile-review-cards"></div>
+            <h3 class="profile-section-title">Películas favoritas</h3>
+            <div id="profileFavoriteMovies" class="profile-review-cards"></div>
             <button type="button" class="btn-moo btn-moo--narrow" onclick="openEditAccountModal()">Modificar cuenta</button>
         </div>
     </div>
@@ -117,8 +119,8 @@
         </div>
     </div>
 
-    <script src="../JavaScript/seed-data.js"></script>
-    <script src="../JavaScript/storage.js"></script>
-    <script src="../JavaScript/script.js"></script>
+    <script src="../js/seed-data.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/script.js"></script>
 </body>
 </html>

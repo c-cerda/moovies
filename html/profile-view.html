@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>MOOVIES - Perfil</title>
-    <link rel="stylesheet" href="../CSS/styles.css">
+    <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body class="profile-page-body">
     <header>
         <a href="catalog.html" class="header-logo">
-            <img src="../MOO/MOOVIES_icon.png" alt="Logo">
+            <img src="../moo/MOOVIES_icon.png" alt="Logo">
         </a>
         <a href="catalog.html" class="profile-back-link">← Volver al catálogo</a>
     </header>
@@ -25,10 +25,12 @@
             </div>
             <h2 class="profile-section-title">Reseñas</h2>
             <div id="pvReviews" class="profile-review-cards"></div>
+            <h2 class="profile-section-title">Favoritas</h2>
+            <div id="pvFavorites" class="profile-review-cards"></div>
         </div>
     </main>
-    <script src="../JavaScript/seed-data.js"></script>
-    <script src="../JavaScript/storage.js"></script>
+    <script src="../js/seed-data.js"></script>
+    <script src="../js/storage.js"></script>
     <script>
         (function () {
             function parseUserParam() {
@@ -62,6 +64,14 @@
                     if (String(movies[i].id) === pid) return movies[i].titulo || pid;
                 }
                 return 'Película #' + pid;
+            }
+
+            function movieById(movies, id) {
+                var pid = String(id);
+                for (var i = 0; i < movies.length; i++) {
+                    if (String(movies[i].id) === pid) return movies[i];
+                }
+                return null;
             }
 
             document.addEventListener('DOMContentLoaded', function () {
@@ -107,6 +117,23 @@
                                 '<div class="profile-review-card__meta">' + milkBottlesHTML(c.vasosLeche) + '</div>' +
                                 '<p class="profile-review-card__text">' + escapeHtml(c.comentario) + '</p>';
                             box.appendChild(card);
+                        });
+                    }
+                    var favBox = document.getElementById('pvFavorites');
+                    var favIds = MooviesStorage.getFavoritesForUser(user.nombreUsuario);
+                    favBox.innerHTML = '';
+                    if (!favIds.length) {
+                        favBox.innerHTML = '<p class="comments-empty">Este usuario aún no tiene favoritas.</p>';
+                    } else {
+                        favIds.forEach(function (movieId) {
+                            var m = movieById(movies, movieId);
+                            if (!m) return;
+                            var card = document.createElement('article');
+                            card.className = 'profile-review-card';
+                            card.innerHTML =
+                                '<h4>' + escapeHtml(m.titulo) + '</h4>' +
+                                '<p class="profile-review-card__text">' + escapeHtml(m.genero || 'Sin género') + '</p>';
+                            favBox.appendChild(card);
                         });
                     }
                     content.hidden = false;
