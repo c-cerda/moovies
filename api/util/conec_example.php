@@ -10,8 +10,8 @@ class ConexionBD
 	public function __construct()
 	{
 		$this->dsn = "mysql:host=localhost;port=3306;dbname=moovies;charset=utf8mb4";
-		$this->username = 'root';   // cambia si usas otro user
-		$this->password = '';       // tu password real
+		$this->username = 'YOUR_USER';
+		$this->password = 'YOUR_PASSWORD';
 
 		try {
 			$this->conexion = new PDO($this->dsn, $this->username, $this->password);
