@@ -1,11 +1,11 @@
 <?php
-require_once "ConexionBD.php";
+require_once "conec.php";
 
 $db = new ConexionBD();
 $conn = $db->getConexion();
 
 if ($conn) {
-	echo "Conexion exitosa :)";
+	echo "Conexion exitosa :P";
 } else {
 	echo $db->getMensaje();
 }
