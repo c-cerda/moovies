@@ -2,24 +2,24 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <title>MOOVIES - Catálogo</title>
-    <link rel="stylesheet" href="../css/styles.css">
+	<meta charset="UTF-8">
+	<title>MOOVIES - Catálogo</title>
+	<link rel="stylesheet" href="../css/styles.css">
 </head>
 
 <body>
-    <header>
-        <a href="index.html" class="header-logo">
-            <img src="../moo/MOOVIES_icon.png" alt="Logo">
-        </a>
-        <div class="user-menu">
-            <div class="user-info" id="userGreeting" onclick="toggleMenu()">Hola, Cineasta ▼</div>
-            <div id="logoutMenu" class="dropdown-content">
-                <a href="#" onclick="openMyProfile(event)">Ver perfil</a>
-                <a href="#" onclick="logout(event)">Cerrar sesión</a>
-            </div>
-        </div>
-    </header>
+	<header>
+		<a href="index.html" class="header-logo">
+			<img src="../images/MOOVIES_icon.png" alt="Logo">
+		</a>
+		<div class="user-menu">
+			<div class="user-info" id="userGreeting" onclick="toggleMenu()">Hola, Cineasta ▼</div>
+			<div id="logoutMenu" class="dropdown-content">
+				<a href="#" onclick="openMyProfile(event)">Ver perfil</a>
+				<a href="#" onclick="logout(event)">Cerrar sesión</a>
+			</div>
+		</div>
+	</header>
 
 	<main class="catalog-content">
 		<h2 class="catalog-title">CARTELERA DESTACADA</h2>
@@ -101,25 +101,28 @@
 		</div>
 	</div>
 
-    <div id="profileModal" class="modal modal--scrollable" style="z-index: 1100;">
-        <div class="modal-content modal-content--wide profile-modal-box">
-            <span class="close-btn" onclick="closeProfileModal()">&times;</span>
-            <h2 class="profile-modal-title">Mi perfil</h2>
-            <div class="profile-header-block">
-                <p><strong>Nombre para mostrar:</strong> <span id="profileDisplayName"></span></p>
-                <p><strong>Usuario:</strong> <span id="profileUsername"></span></p>
-                <p><strong>Leche favorita:</strong> <span id="profileLeche"></span></p>
-                <label class="profile-label" for="profileDescripcion">Descripción</label>
-                <textarea id="profileDescripcion" class="profile-desc-input" rows="3" maxlength="500" placeholder="Cuéntale algo a la manada…"></textarea>
-                <button type="button" class="btn-send btn-send--inline" onclick="saveProfileDescripcion()">Guardar descripción</button>
-            </div>
-            <h3 class="profile-section-title">Películas que has reseñado</h3>
-            <div id="profileMyReviews" class="profile-review-cards"></div>
-            <h3 class="profile-section-title">Películas favoritas</h3>
-            <div id="profileFavoriteMovies" class="profile-review-cards"></div>
-            <button type="button" class="btn-moo btn-moo--narrow" onclick="openEditAccountModal()">Modificar cuenta</button>
-        </div>
-    </div>
+	<div id="profileModal" class="modal modal--scrollable" style="z-index: 1100;">
+		<div class="modal-content modal-content--wide profile-modal-box">
+			<span class="close-btn" onclick="closeProfileModal()">&times;</span>
+			<h2 class="profile-modal-title">Mi perfil</h2>
+			<div class="profile-header-block">
+				<p><strong>Nombre para mostrar:</strong> <span id="profileDisplayName"></span></p>
+				<p><strong>Usuario:</strong> <span id="profileUsername"></span></p>
+				<p><strong>Leche favorita:</strong> <span id="profileLeche"></span></p>
+				<label class="profile-label" for="profileDescripcion">Descripción</label>
+				<textarea id="profileDescripcion" class="profile-desc-input" rows="3" maxlength="500"
+					placeholder="Cuéntale algo a la manada…"></textarea>
+				<button type="button" class="btn-send btn-send--inline"
+					onclick="saveProfileDescripcion()">Guardar descripción</button>
+			</div>
+			<h3 class="profile-section-title">Películas que has reseñado</h3>
+			<div id="profileMyReviews" class="profile-review-cards"></div>
+			<h3 class="profile-section-title">Películas favoritas</h3>
+			<div id="profileFavoriteMovies" class="profile-review-cards"></div>
+			<button type="button" class="btn-moo btn-moo--narrow" onclick="openEditAccountModal()">Modificar
+				cuenta</button>
+		</div>
+	</div>
 
 	<div id="editAccountModal" class="modal modal--scrollable" style="z-index: 1150;">
 		<div class="modal-content profile-modal-box">
@@ -149,9 +152,9 @@
 		</div>
 	</div>
 
-    <script src="../js/seed-data.js"></script>
-    <script src="../js/storage.js"></script>
-    <script src="../js/script.js"></script>
+	<script src="../js/seed-data.js"></script>
+	<script src="../js/storage.js"></script>
+	<script src="../js/script.js"></script>
 </body>
 
 </html>

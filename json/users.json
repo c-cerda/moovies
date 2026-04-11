@@ -18,6 +18,5 @@
   {"id": "u_17", "nombreUsuario": "festival_moo", "nombre": "Festival Moo", "email": "festival@moovies.local", "lecheFavorita": "Deslactosada", "password": "moo123"},
   {"id": "u_18", "nombreUsuario": "rollo_camara", "nombre": "Rollo Cámara", "email": "rollo@moovies.local", "lecheFavorita": "Entera", "password": "moo123"},
   {"id": "u_19", "nombreUsuario": "claqueta_azul", "nombre": "Claqueta Azul", "email": "claqueta@moovies.local", "lecheFavorita": "Almendra", "password": "moo123"},
-  {"id": "u_20", "nombreUsuario": "vaquero_lacteo", "nombre": "carlos", "email": "admin", "lecheFavorita": "Entera", "password": "moo"},
-  {"id": "u_21", "nombreUsuario": "test", "nombre": "working", "email": "me", "lecheFavorita": "Almendra", "password": "1234"}
+  {"id": "u_20", "nombreUsuario": "vaquero_lacteo", "nombre": "admin", "email": "admin", "lecheFavorita": "Entera", "password": "1234"}
 ]
