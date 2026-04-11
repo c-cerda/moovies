@@ -20,7 +20,7 @@
 --
 
 DROP DATABASE IF EXISTS `moovies`;
-CREATE DATABASE 'moovies';
+CREATE DATABASE moovies;
 use moovies;
 
 
