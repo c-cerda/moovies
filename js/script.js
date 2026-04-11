@@ -1,4 +1,4 @@
-const MOVIES_JSON = '../JSON/movies.json';
+const MOVIES_JSON = '../json/movies.json';
 
 let moviesCache = [];
 let currentMovieId = null;
@@ -39,6 +39,15 @@ function shortDesc(m) {
 function getMovieTitleById(movieId) {
     const m = moviesCache.find((x) => String(x.id) === String(movieId));
     return m ? m.titulo : 'Película #' + movieId;
+}
+
+function getMovieById(movieId) {
+    return moviesCache.find((x) => String(x.id) === String(movieId)) || null;
+}
+
+function currentSessionUsername() {
+    const s = MooviesStorage.getSessionUser();
+    return s && s.nombreUsuario ? s.nombreUsuario : '';
 }
 
 function getFilteredMovies() {
@@ -98,6 +107,9 @@ function renderMovieGrid() {
         card.className = 'movie-card';
         card.dataset.movieId = m.id;
         card.innerHTML =
+            '<button type="button" class="movie-fav-btn" data-fav-toggle="' +
+            escapeHtml(m.id) +
+            '" title="Agregar o quitar de favoritos" aria-label="Agregar o quitar de favoritos">☆</button>' +
             '<img src="' +
             escapeHtml(m.imagen) +
             '" alt="' +
@@ -126,6 +138,31 @@ function renderMovieGrid() {
             const id = btn.getAttribute('data-open-review');
             openModalById(id);
         });
+    });
+    paintFavoriteButtons();
+    grid.querySelectorAll('[data-fav-toggle]').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const id = btn.getAttribute('data-fav-toggle');
+            try {
+                MooviesStorage.toggleFavoriteMovie(id);
+                paintFavoriteButtons();
+                renderProfileFavorites();
+            } catch (err) {
+                alert(err.message || 'No se pudo actualizar favoritos');
+            }
+        });
+    });
+}
+
+function paintFavoriteButtons() {
+    const uname = currentSessionUsername();
+    document.querySelectorAll('[data-fav-toggle]').forEach((btn) => {
+        const id = btn.getAttribute('data-fav-toggle');
+        const on = uname ? MooviesStorage.isFavoriteMovie(uname, id) : false;
+        btn.textContent = on ? '★' : '☆';
+        btn.classList.toggle('movie-fav-btn--active', on);
     });
 }
 
@@ -208,57 +245,6 @@ function voteRowHtml(commentId, replyId, likedBy, dislikedBy, sessionNombre) {
     );
 }
 
-function renderRepliesBlock(c, sessionUser, sessionNombre) {
-    MooviesStorage.normalizeComment(c);
-    const reps = (c.respuestas || []).slice();
-    if (!reps.length) return '';
-    reps.sort(function (a, b) {
-        return (b.fecha || '').localeCompare(a.fecha || '');
-    });
-    return (
-        '<div class="comment-replies">' +
-        reps
-            .map(function (r) {
-                const disp = MooviesStorage.getDisplayNameForUsuario(r.usuario);
-                const enc = encodeURIComponent(r.usuario);
-                const rid = escapeHtml(String(r.id));
-                const ownR =
-                    sessionUser &&
-                    r.usuario &&
-                    String(r.usuario).toLowerCase() === String(sessionUser).toLowerCase();
-                const nameB =
-                    '<button type="button" class="comment-name-link comment-name-link--small" data-view-profile="' +
-                    enc +
-                    '">' +
-                    escapeHtml(disp) +
-                    ' <span class="comment-nick">(@' +
-                    escapeHtml(r.usuario) +
-                    ')</span></button>';
-                const delR = ownR
-                    ? '<button type="button" class="btn-reply-delete" data-action="delete-reply" data-comment-id="' +
-                      escapeHtml(String(c.id)) +
-                      '" data-reply-id="' +
-                      rid +
-                      '">Eliminar</button>'
-                    : '';
-                return (
-                    '<div class="reply-row">' +
-                    '<div class="reply-row__head">' +
-                    nameB +
-                    voteRowHtml(c.id, r.id, r.likedBy, r.dislikedBy, sessionNombre) +
-                    '</div>' +
-                    '<p class="reply-row__text">' +
-                    escapeHtml(r.texto) +
-                    '</p>' +
-                    delR +
-                    '</div>'
-                );
-            })
-            .join('') +
-        '</div>'
-    );
-}
-
 function renderCommentsList(comments) {
     const container = document.getElementById('commentsList');
     if (!container) return;
@@ -287,15 +273,6 @@ function renderCommentsList(comments) {
                 ')</span></button>';
             const cid = escapeHtml(String(c.id));
             const votes = voteRowHtml(c.id, '', c.likedBy, c.dislikedBy, sessionNombre);
-            const replies = renderRepliesBlock(c, sessionUser, sessionNombre);
-            const replyBox =
-                '<div class="comment-reply-form" hidden>' +
-                '<textarea class="reply-textarea" rows="2" maxlength="2000" placeholder="Escribe una respuesta…"></textarea>' +
-                '<button type="button" class="btn-send btn-send--small" data-action="send-reply" data-comment-id="' +
-                cid +
-                '">Publicar respuesta</button>' +
-                '</div>' +
-                '<button type="button" class="btn-comment-reply" data-action="toggle-reply">Responder</button>';
             if (own) {
                 const rating = Math.max(0, Math.min(5, parseInt(c.vasosLeche, 10) || 0));
                 const glasses = [1, 2, 3, 4, 5]
@@ -340,8 +317,6 @@ function renderCommentsList(comments) {
                     '<button type="button" class="btn-send btn-send--inline" data-action="save-edit">Guardar</button>' +
                     '<button type="button" class="btn-comment-cancel" data-action="cancel-edit">Cancelar</button>' +
                     '</div></div>' +
-                    replies +
-                    replyBox +
                     '</div></div>'
                 );
             }
@@ -356,8 +331,6 @@ function renderCommentsList(comments) {
                 '<p class="comment-item__text">' +
                 escapeHtml(c.comentario) +
                 '</p>' +
-                replies +
-                replyBox +
                 '</div></div>'
             );
         })
@@ -390,44 +363,6 @@ function handleCommentsListClick(e) {
             loadCommentsForMovie(String(currentMovieId));
         } catch (err) {
             alert(err.message || 'No se pudo votar');
-        }
-        return;
-    }
-    const toggleReplyBtn = e.target.closest('[data-action="toggle-reply"]');
-    if (toggleReplyBtn) {
-        const wrap = toggleReplyBtn.closest('.comment-thread');
-        const form = wrap ? wrap.querySelector('.comment-reply-form') : null;
-        if (form) form.hidden = !form.hidden;
-        return;
-    }
-    const sendReplyBtn = e.target.closest('[data-action="send-reply"]');
-    if (sendReplyBtn) {
-        const cid = sendReplyBtn.getAttribute('data-comment-id');
-        const form = sendReplyBtn.closest('.comment-reply-form');
-        const ta = form ? form.querySelector('.reply-textarea') : null;
-        const text = (ta && ta.value ? ta.value : '').trim();
-        if (!text) {
-            alert('Escribe una respuesta.');
-            return;
-        }
-        try {
-            MooviesStorage.addReply(cid, text);
-            loadCommentsForMovie(String(currentMovieId));
-        } catch (err) {
-            alert(err.message || 'No se pudo publicar');
-        }
-        return;
-    }
-    const delReplyBtn = e.target.closest('[data-action="delete-reply"]');
-    if (delReplyBtn) {
-        const cid = delReplyBtn.getAttribute('data-comment-id');
-        const rid = delReplyBtn.getAttribute('data-reply-id');
-        if (!confirm('¿Eliminar esta respuesta?')) return;
-        try {
-            MooviesStorage.deleteReply(cid, rid);
-            loadCommentsForMovie(String(currentMovieId));
-        } catch (err) {
-            alert(err.message || 'No se pudo eliminar');
         }
         return;
     }
@@ -667,6 +602,7 @@ function fillProfileModal() {
     const ta = document.getElementById('profileDescripcion');
     if (ta) ta.value = rec.descripcion != null ? rec.descripcion : '';
     renderProfileMyReviews();
+    renderProfileFavorites();
 }
 
 function renderProfileMyReviews() {
@@ -706,6 +642,33 @@ function renderProfileMyReviews() {
             '</p>';
         box.appendChild(card);
     });
+}
+
+function renderFavoriteCardsInto(containerId, username, emptyText) {
+    const box = document.getElementById(containerId);
+    if (!box) return;
+    const ids = MooviesStorage.getFavoritesForUser(username);
+    box.innerHTML = '';
+    if (!ids.length) {
+        box.innerHTML = '<p class="comments-empty">' + escapeHtml(emptyText) + '</p>';
+        return;
+    }
+    ids.forEach(function (movieId) {
+        const m = getMovieById(movieId);
+        if (!m) return;
+        const card = document.createElement('article');
+        card.className = 'profile-review-card';
+        card.innerHTML =
+            '<h4>' + escapeHtml(m.titulo) + '</h4>' +
+            '<p class="profile-review-card__text">' + escapeHtml(m.genero || 'Sin género') + '</p>';
+        box.appendChild(card);
+    });
+}
+
+function renderProfileFavorites() {
+    const session = MooviesStorage.getSessionUser();
+    if (!session || !session.nombreUsuario) return;
+    renderFavoriteCardsInto('profileFavoriteMovies', session.nombreUsuario, 'Aún no tienes favoritas.');
 }
 
 function saveProfileDescripcion() {

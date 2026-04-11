@@ -2,55 +2,51 @@
 <html lang="es">
 
 <head>
-	<meta charset="UTF-8">
-	<title>MOOVIES - Inicio</title>
-	<link rel="stylesheet" href="../css/styles.css">
+    <meta charset="UTF-8">
+    <title>MOOVIES - Inicio</title>
+    <link rel="stylesheet" href="../css/styles.css">
 </head>
 
 <body class="split-vertical-layout">
 
-	<div class="top-half-blue">
-		<img src="../moo/MOOVIES_LOGO.png" alt="Logo" class="main-logo">
-	</div>
+    <div class="top-half-blue">
+        <img src="../moo/MOOVIES_LOGO.png" alt="Logo" class="main-logo">
+    </div>
 
-	<div class="bottom-half-white">
-		<div class="home-buttons">
-			<a href="login.html" class="btn-moo">Iniciar Sesión</a>
-			<a href="register.html" class="btn-moo">Registrarse</a>
-			<button class="btn-moo" onclick="openAbout()">Acerca de nosotros</button>
-		</div>
-	</div>
+    <div class="bottom-half-white">
+        <div class="home-buttons">
+            <a href="login.html" class="btn-moo">Iniciar Sesión</a>
+            <a href="register.html" class="btn-moo">Registrarse</a>
+            <button class="btn-moo" onclick="openAbout()">Acerca de nosotros</button>
+        </div>
+    </div>
 
-	<button class="btn-contact" onclick="contactUs()">Contáctanos</button>
+    <button class="btn-contact" onclick="contactUs()">Contáctanos</button>
 
-	<div id="aboutModal" class="modal">
-		<div class="modal-content">
-			<span class="close-btn" onclick="closeAbout()">&times;</span>
-			<div style="padding: 20px;">
-				<h2 style="text-align: center;">🍿 ¿Qué es MOOVIES? 🥛</h2>
-				<p>¡Bienvenido a la comunidad más lechera del cine! 🐮 En <strong>MOOVIES</strong>,
-					vivimos el cine al máximo:</p>
-				<ul>
-					<li>🎬 <strong>Catálogo Galáctico:</strong> Películas épicas a un clic.</li>
-					<li>✍️ <strong>Tu Opinión Cuenta:</strong> Reseñas directas de la comunidad.
-					</li>
-					<li>🥛 <strong>Calificación Lechera:</strong> Nuestro sello único de calidad.
-					</li>
-					<li>🚀 <strong>Comunidad:</strong> Cineastas unidos por buenas historias.</li>
-					<li>💻 <strong>Tecnología:</strong> Interfaz rápida y fluida para ti.</li>
-				</ul>
-				<p style="text-align: center;">¡Prepara tus palomitas y disfruta del viaje! 🎥✨</p>
-				<button class="btn-moo" onclick="closeAbout()"
-					style="display:block; margin: 20px auto; width: 100%;">¡Entendido!</button>
-			</div>
-		</div>
-	</div>
+    <div id="aboutModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeAbout()">&times;</span>
+            <div style="padding: 20px;">
+                <h2 style="text-align: center;">🍿 ¿Qué es MOOVIES? 🥛</h2>
+                <p>¡Bienvenido a la comunidad más lechera del cine! 🐮 En <strong>MOOVIES</strong>, vivimos el cine al máximo:</p>
+                <ul>
+                    <li>🎬 <strong>Catálogo Galáctico:</strong> Películas épicas a un clic.</li>
+                    <li>✍️ <strong>Tu Opinión Cuenta:</strong> Reseñas directas de la comunidad.</li>
+                    <li>🥛 <strong>Calificación Lechera:</strong> Nuestro sello único de calidad.</li>
+                    <li>🚀 <strong>Comunidad:</strong> Cineastas unidos por buenas historias.</li>
+                    <li>💻 <strong>Tecnología:</strong> Interfaz rápida y fluida para ti.</li>
+                </ul>
+                <p style="text-align: center;">¡Prepara tus palomitas y disfruta del viaje! 🎥✨</p>
+                <button class="btn-moo" onclick="closeAbout()" style="display:block; margin: 20px auto; width: 100%;">¡Entendido!</button>
+            </div>
+        </div>
+    </div>
 
-	<script src="../js/contact.js"></script>
-	<script>
-		function openAbout() {document.getElementById('aboutModal').style.display = 'block';}
-		function closeAbout() {document.getElementById('aboutModal').style.display = 'none';}
-	</script>
+    <script src="../js/contact.js"></script>
+    <script>
+        function openAbout() { document.getElementById('aboutModal').style.display = 'block'; }
+        function closeAbout() { document.getElementById('aboutModal').style.display = 'none'; }
+    </script>
 </body>
 
 </html>

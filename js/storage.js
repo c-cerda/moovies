@@ -1,10 +1,14 @@
 /**
- * Persistencia local + exportación por descarga (file:// no puede escribir en disco).
- * Comentarios: votos (like/dislike), respuestas anidadas.
+ * Persistencia local (solo navegador): los comentarios se guardan como el mismo array
+ * que define json/comments.json, pero en localStorage (clave: moovies_comments_v6).
+ * JavaScript en el cliente no puede sobrescribir archivos .json del proyecto en disco
+ * sin descarga ni servidor; por eso no hay PHP ni escritura directa a json/comments.json.
+ * Opcional: MooviesStorage.downloadJsonFile() para respaldo manual.
  */
 (function (global) {
     var K_USERS = 'moovies_users_v4';
     var K_COMMENTS = 'moovies_comments_v6';
+    var K_FAVORITES = 'moovies_favorites_v1';
     var K_SESSION = 'moovies_session';
 
     function parseJsonArray(raw, fallback) {
@@ -58,7 +62,6 @@
 
     function saveUsers(users) {
         localStorage.setItem(K_USERS, JSON.stringify(users));
-        downloadJsonFile('users.json', users);
     }
 
     function getComments() {
@@ -68,9 +71,83 @@
         });
     }
 
+    /** Guarda el array de comentarios (misma forma que json/comments.json) solo en localStorage. */
     function saveComments(comments) {
         localStorage.setItem(K_COMMENTS, JSON.stringify(comments));
-        downloadJsonFile('comments.json', comments);
+    }
+
+    function getFavoritesMap() {
+        try {
+            var raw = localStorage.getItem(K_FAVORITES);
+            var obj = raw ? JSON.parse(raw) : {};
+            if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return {};
+            return obj;
+        } catch (e) {
+            return {};
+        }
+    }
+
+    function saveFavoritesMap(map) {
+        localStorage.setItem(K_FAVORITES, JSON.stringify(map || {}));
+    }
+
+    function normalizeMovieIdList(arr) {
+        if (!Array.isArray(arr)) return [];
+        var out = [];
+        var seen = {};
+        for (var i = 0; i < arr.length; i++) {
+            var id = String(arr[i]);
+            if (!seen[id]) {
+                seen[id] = true;
+                out.push(id);
+            }
+        }
+        return out;
+    }
+
+    function getFavoritesForUser(nombreUsuario) {
+        if (!nombreUsuario) return [];
+        var map = getFavoritesMap();
+        var key = String(nombreUsuario).toLowerCase();
+        return normalizeMovieIdList(map[key]);
+    }
+
+    function setFavoritesForUser(nombreUsuario, movieIds) {
+        if (!nombreUsuario) throw new Error('Usuario inválido');
+        var map = getFavoritesMap();
+        var key = String(nombreUsuario).toLowerCase();
+        map[key] = normalizeMovieIdList(movieIds);
+        saveFavoritesMap(map);
+        return map[key];
+    }
+
+    function isFavoriteMovie(nombreUsuario, peliculaId) {
+        var list = getFavoritesForUser(nombreUsuario);
+        var pid = String(peliculaId);
+        for (var i = 0; i < list.length; i++) {
+            if (String(list[i]) === pid) return true;
+        }
+        return false;
+    }
+
+    function toggleFavoriteMovie(peliculaId) {
+        var session = getSessionUser();
+        if (!session || !session.nombreUsuario) throw new Error('Inicia sesión para guardar favoritos');
+        if (!isRegisteredUsername(session.nombreUsuario)) throw new Error('Cuenta no registrada');
+        var pid = String(peliculaId);
+        var list = getFavoritesForUser(session.nombreUsuario);
+        var exists = false;
+        var next = [];
+        for (var i = 0; i < list.length; i++) {
+            if (String(list[i]) === pid) {
+                exists = true;
+                continue;
+            }
+            next.push(String(list[i]));
+        }
+        if (!exists) next.push(pid);
+        setFavoritesForUser(session.nombreUsuario, next);
+        return !exists;
     }
 
     function getRegisteredUsernamesLower() {
@@ -204,6 +281,14 @@
                 }
             }
             saveComments(comments);
+            var favoritesMap = getFavoritesMap();
+            var oldFavKey = String(prevUser).toLowerCase();
+            var newFavKey = String(nu).toLowerCase();
+            if (favoritesMap[oldFavKey]) {
+                favoritesMap[newFavKey] = normalizeMovieIdList(favoritesMap[oldFavKey]);
+                delete favoritesMap[oldFavKey];
+                saveFavoritesMap(favoritesMap);
+            }
         }
         users[idx].nombreUsuario = nu;
         users[idx].nombre = nm;
@@ -324,64 +409,6 @@
         return comments[ci];
     }
 
-    function addReply(commentId, texto) {
-        var session = getSessionUser();
-        if (!session || !session.nombreUsuario) throw new Error('Sesión inválida');
-        if (!isRegisteredUsername(session.nombreUsuario)) throw new Error('Tu cuenta no está registrada');
-        var t = String(texto || '').trim();
-        if (!t) throw new Error('Escribe una respuesta');
-        if (t.length > 2000) throw new Error('La respuesta es demasiado larga');
-        var comments = getComments();
-        var ci = -1;
-        for (var i = 0; i < comments.length; i++) {
-            if (comments[i] && String(comments[i].id) === String(commentId)) {
-                ci = i;
-                break;
-            }
-        }
-        if (ci < 0) throw new Error('Comentario no encontrado');
-        normalizeComment(comments[ci]);
-        var row = {
-            id: 'r_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8),
-            usuario: session.nombreUsuario,
-            texto: t,
-            fecha: new Date().toISOString(),
-            likedBy: [],
-            dislikedBy: [],
-        };
-        comments[ci].respuestas.push(row);
-        saveComments(comments);
-        return row;
-    }
-
-    function deleteReply(commentId, replyId) {
-        var session = getSessionUser();
-        if (!session || !session.nombreUsuario) throw new Error('Sesión inválida');
-        var comments = getComments();
-        var ci = -1;
-        for (var i = 0; i < comments.length; i++) {
-            if (comments[i] && String(comments[i].id) === String(commentId)) {
-                ci = i;
-                break;
-            }
-        }
-        if (ci < 0) throw new Error('Comentario no encontrado');
-        var resp = comments[ci].respuestas || [];
-        var ri = -1;
-        for (var r = 0; r < resp.length; r++) {
-            if (resp[r] && String(resp[r].id) === String(replyId)) {
-                ri = r;
-                break;
-            }
-        }
-        if (ri < 0) throw new Error('Respuesta no encontrada');
-        if (String(resp[ri].usuario).toLowerCase() !== String(session.nombreUsuario).toLowerCase()) {
-            throw new Error('Solo puedes borrar tus respuestas');
-        }
-        resp.splice(ri, 1);
-        saveComments(comments);
-    }
-
     function findCommentIndexForUserAndMovie(peliculaId, nombreUsuario) {
         if (!nombreUsuario) return -1;
         var want = String(nombreUsuario).toLowerCase();
@@ -493,8 +520,10 @@
         updateCommentById: updateCommentById,
         deleteCommentById: deleteCommentById,
         toggleCommentVote: toggleCommentVote,
-        addReply: addReply,
-        deleteReply: deleteReply,
+        getFavoritesForUser: getFavoritesForUser,
+        setFavoritesForUser: setFavoritesForUser,
+        isFavoriteMovie: isFavoriteMovie,
+        toggleFavoriteMovie: toggleFavoriteMovie,
         isRegisteredUsername: isRegisteredUsername,
         downloadJsonFile: downloadJsonFile,
         normalizeComment: normalizeComment,
