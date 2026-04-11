@@ -672,6 +672,331 @@ body {
     font-weight: bold;
 }
 
+/* --- Index: layout horizontal (mockup) azul | blanco --- */
+.index-landing {
+    display: grid;
+    grid-template-columns: minmax(0, 2.15fr) minmax(260px, 1fr);
+    min-height: 100vh;
+    min-height: 100dvh;
+    margin: 0;
+    background: var(--azul-fuerte, #003399);
+}
+
+.index-landing__left {
+    background-color: var(--azul-fuerte, #003399);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(20px, 3vw, 40px) clamp(16px, 3vw, 36px);
+    min-height: 0;
+    min-width: 0;
+}
+
+.index-landing__title {
+    margin: 0 0 clamp(16px, 2.5vh, 28px);
+    padding: 0 12px;
+    font-size: clamp(1.15rem, 2.4vw, 1.65rem);
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.35;
+    color: #fff;
+    text-wrap: balance;
+}
+
+.index-landing__right {
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(20px, 3vh, 36px);
+    padding: clamp(24px, 4vw, 48px) clamp(20px, 3vw, 32px);
+    box-shadow: -8px 0 28px rgba(0, 0, 0, 0.12);
+    min-width: 0;
+}
+
+.index-landing__logo {
+    width: min(300px, 78vw);
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.index-landing__nav {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    width: 100%;
+    max-width: 280px;
+}
+
+.btn-index-nav {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 22px;
+    border-radius: 50px;
+    border: 2px solid var(--azul-fuerte, #003399);
+    background: #fff;
+    color: var(--azul-fuerte, #003399);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-index-nav:hover {
+    background: var(--celeste-suave, #e6f0ff);
+    transform: scale(1.02);
+}
+
+.btn-index-nav:focus-visible {
+    outline: 3px solid var(--azul-fuerte, #003399);
+    outline-offset: 2px;
+}
+
+.btn-index-nav--primary {
+    background: var(--azul-fuerte, #003399);
+    color: #fff;
+    border-color: var(--azul-fuerte, #003399);
+}
+
+.btn-index-nav--primary:hover {
+    background: #00257a;
+    border-color: #00257a;
+    color: #fff;
+}
+
+@media (max-width: 960px) {
+    .index-landing {
+        grid-template-columns: 1fr;
+    }
+
+    .index-landing__right {
+        box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.1);
+        order: -1;
+    }
+
+    .index-landing__left {
+        min-height: min(70vh, 620px);
+    }
+}
+
+/* Carrusel en columna izquierda: 3 visibles, póster completo */
+.index-landing__left .home-carousel {
+    width: 100%;
+    max-width: 100%;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.index-landing__left .home-carousel__shell {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.index-landing__left .home-carousel__btn {
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    color: #003399;
+    font-size: 1.85rem;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+    transition: transform 0.2s ease, background 0.2s ease;
+    z-index: 3;
+}
+
+.index-landing__left .home-carousel__btn:hover {
+    background: #fff;
+    transform: scale(1.06);
+}
+
+.index-landing__left .home-carousel__btn:focus-visible {
+    outline: 3px solid #e6f0ff;
+    outline-offset: 2px;
+}
+
+.index-landing__left .home-carousel__btn:active {
+    transform: scale(0.96);
+}
+
+/* Contenedor de consulta de tamaño: bordes proporcionales al ancho del carrusel */
+.index-landing__left .home-carousel__viewport {
+    container-type: inline-size;
+    container-name: moovies-carousel;
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    height: clamp(320px, 52vh, 520px);
+    max-height: min(70vh, 100%);
+    min-height: 260px;
+    overflow: hidden;
+    border: none;
+    border-radius: clamp(18px, 3vmin, 36px);
+    background: transparent;
+    box-shadow: none;
+    box-sizing: border-box;
+}
+
+.index-landing__left .home-carousel__track {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 16px;
+    width: max-content;
+    will-change: transform;
+    transition: transform 0.8s ease-in-out;
+}
+
+/* Esquinas grandes; con container queries usamos cqi para escalar con el póster */
+.index-landing__left .home-carousel__cell {
+    flex-shrink: 0;
+    border-radius: clamp(20px, 4vmin, 52px);
+    overflow: hidden;
+    background: transparent;
+    box-shadow: none;
+    position: relative;
+    transition: transform 0.25s ease;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.index-landing__left .home-carousel__cell:hover {
+    z-index: 2;
+    transform: scale(1.04);
+}
+
+.index-landing__left .home-carousel__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    border-radius: clamp(14px, 3.2vmin, 44px);
+    transition: transform 0.25s ease;
+    pointer-events: none;
+}
+
+.index-landing__left .home-carousel__cell:hover .home-carousel__img {
+    transform: scale(1.02);
+}
+
+@supports (container-type: inline-size) {
+    .index-landing__left .home-carousel__viewport {
+        border-radius: clamp(18px, 5cqi, 40px);
+    }
+
+    .index-landing__left .home-carousel__cell {
+        border-radius: clamp(20px, 7.5cqi, 64px);
+    }
+
+    .index-landing__left .home-carousel__img {
+        border-radius: clamp(14px, 6cqi, 54px);
+    }
+}
+
+@media (max-width: 480px) {
+    .index-landing__left .home-carousel__btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+    }
+
+    .index-landing__left .home-carousel__shell {
+        gap: 8px;
+    }
+}
+
+/* Carrusel en otras páginas (si se reutiliza clase): estilos base genéricos */
+.home-carousel__shell {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.home-carousel__btn {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    color: #003399;
+    font-size: 1.75rem;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s ease, background 0.2s ease;
+    z-index: 3;
+}
+
+.home-carousel__track {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 12px;
+    width: max-content;
+    will-change: transform;
+    transition: transform 0.8s ease-in-out;
+}
+
+.home-carousel__cell {
+    flex-shrink: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.35);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.home-carousel__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    pointer-events: none;
+}
+
 /* --- CATÁLOGO MÁS ARRIBA --- */
 .catalog-content { 
     padding: 20px 5%; /* Reduje el padding superior de 40px a 20px */

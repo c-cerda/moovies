@@ -7,20 +7,31 @@
 	<link rel="stylesheet" href="../css/styles.css">
 </head>
 
-<body class="split-vertical-layout">
-	<div class="top-half-blue">
-		<img src="../images/MOOVIES_LOGO.png" alt="Logo" class="main-logo">
-	</div>
-
-	<div class="bottom-half-white">
-		<div class="home-buttons">
-			<a href="login.html" class="btn-moo">Iniciar Sesión</a>
-			<a href="register.html" class="btn-moo">Registrarse</a>
-			<button class="btn-moo" onclick="openAbout()">Acerca de nosotros</button>
+<body class="index-landing">
+	<section class="index-landing__left" aria-label="Cartelera">
+		<h1 class="index-landing__title">Habla con nosotros acerca de:</h1>
+		<div class="home-carousel" id="homeCarousel" aria-live="polite" aria-label="Pósters del catálogo">
+			<div class="home-carousel__shell">
+				<button type="button" id="homeCarouselPrev" class="home-carousel__btn home-carousel__btn--prev"
+					aria-label="Anterior">‹</button>
+				<div class="home-carousel__viewport" id="homeCarouselViewport">
+					<div class="home-carousel__track" id="homeCarouselTrack"></div>
+				</div>
+				<button type="button" id="homeCarouselNext" class="home-carousel__btn home-carousel__btn--next"
+					aria-label="Siguiente">›</button>
+			</div>
 		</div>
-	</div>
+	</section>
 
-	<button class="btn-contact" onclick="contactUs()">Contáctanos</button>
+	<aside class="index-landing__right" aria-label="Menú principal">
+		<img src="../images/MOOVIES_LOGO.png" alt="MOOVIES" class="index-landing__logo" width="320" height="120">
+		<nav class="index-landing__nav">
+			<a href="login.html" class="btn-index-nav">Iniciar Sesión</a>
+			<a href="register.html" class="btn-index-nav">Registrarse</a>
+			<button type="button" class="btn-index-nav" onclick="openAbout()">Acerca de nosotros</button>
+			<button type="button" class="btn-index-nav btn-index-nav--primary" onclick="contactUs()">Contáctanos</button>
+		</nav>
+	</aside>
 
 	<div id="aboutModal" class="modal">
 		<div class="modal-content">
@@ -45,10 +56,12 @@
 		</div>
 	</div>
 
+	<script src="../js/seed-data.js"></script>
+	<script src="../js/carrusel.js"></script>
 	<script src="../js/contact.js"></script>
 	<script>
-		function openAbout() {document.getElementById('aboutModal').style.display = 'block';}
-		function closeAbout() {document.getElementById('aboutModal').style.display = 'none';}
+		function openAbout() { document.getElementById('aboutModal').style.display = 'block'; }
+		function closeAbout() { document.getElementById('aboutModal').style.display = 'none'; }
 	</script>
 </body>
 
