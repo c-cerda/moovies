@@ -41,66 +41,43 @@
 			</div>
 		</div>
 	</div>
-	<script src="../js/seed-data.js"></script>
-	<script src="../js/storage.js"></script>
+
 	<script>
-		(function () {
-			var form = document.getElementById('registerForm');
-			var msg = document.getElementById('authMessage');
-			form.addEventListener('submit', function (e) {
-				e.preventDefault();
-				msg.hidden = true;
-				var nombreUsuario = document.getElementById('regNombreUsuario').value.trim();
-				var nombre = document.getElementById('regNombre').value.trim();
-				var email = document.getElementById('regEmail').value.trim();
-				var leche = document.getElementById('regLeche').value;
-				var password = document.getElementById('regPassword').value;
-				if (password.length < 4) {
-					msg.textContent = 'La contraseña debe tener al menos 4 caracteres';
-					msg.hidden = false;
-					return;
-				}
-				if (nombreUsuario.length < 3) {
-					msg.textContent = 'El nombre de usuario debe tener al menos 3 caracteres';
-					msg.hidden = false;
-					return;
-				}
-				MooviesStorage.ensureLocalJsonSeed().then(function () {
-					var users = MooviesStorage.getUsers();
-					var nuLower = nombreUsuario.toLowerCase();
-					var elower = email.toLowerCase();
-					for (var i = 0; i < users.length; i++) {
-						if (users[i].nombreUsuario && String(users[i].nombreUsuario).toLowerCase() === nuLower) {
-							msg.textContent = 'Ese nombre de usuario ya está en uso';
-							msg.hidden = false;
-							return;
-						}
-						if (users[i].email && String(users[i].email).toLowerCase() === elower) {
-							msg.textContent = 'Ese correo ya está registrado';
-							msg.hidden = false;
-							return;
-						}
-					}
-					var newUser = {
-						id: 'u_' + Date.now().toString(36),
-						nombreUsuario: nombreUsuario,
-						nombre: nombre,
-						email: email,
-						lecheFavorita: leche,
-						password: password,
-						descripcion: '',
-					};
-					users.push(newUser);
-					MooviesStorage.saveUsers(users);
-					MooviesStorage.setSessionUser({
-						nombreUsuario: nombreUsuario,
-						nombre: nombre,
-						email: email,
-					});
-					window.location.href = 'catalog.html';
+		document.getElementById('registerForm').addEventListener('submit', async function (e) {
+			e.preventDefault();
+
+			const msg = document.getElementById('authMessage');
+			msg.hidden = true;
+
+			const data = {
+				username: document.getElementById('regNombreUsuario').value.trim(),
+				name: document.getElementById('regNombre').value.trim(),
+				email: document.getElementById('regEmail').value.trim(),
+				milk: document.getElementById('regLeche').value,
+				password: document.getElementById('regPassword').value
+			};
+
+			try {
+				const res = await fetch('../api/register.php', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(data)
 				});
-			});
-		})();
+
+				const result = await res.json();
+				if (result.success) {
+					window.location.href = 'login.html';
+				} else {
+					msg.textContent = result.message;
+					msg.hidden = false;
+				}
+			} catch (err) {
+				msg.textContent = 'Error de conexión con el servidor';
+				msg.hidden = false;
+			}
+		});
 	</script>
 </body>
 
