@@ -301,6 +301,31 @@
         return users[idx];
     }
 
+    /** Cuenta admin por defecto (correo o usuario "admin", contraseña 1234) si no existe. */
+    function ensureDefaultAdminUser() {
+        var users = getUsers();
+        var i;
+        for (i = 0; i < users.length; i++) {
+            var u = users[i];
+            if (!u) continue;
+            var nu = u.nombreUsuario && String(u.nombreUsuario).toLowerCase() === 'admin';
+            var em = u.email && String(u.email).toLowerCase() === 'admin';
+            if ((nu || em) && u.password === '1234') {
+                return;
+            }
+        }
+        users.push({
+            id: 'u_admin_seed',
+            nombreUsuario: 'admin',
+            nombre: 'Administrador',
+            email: 'admin',
+            lecheFavorita: 'Entera',
+            password: '1234',
+            descripcion: '',
+        });
+        saveUsers(users);
+    }
+
     function ensureLocalJsonSeed() {
         return new Promise(function (resolve) {
             var seed = global.MOOVIES_SEED || {};
@@ -312,6 +337,7 @@
                 var c = Array.isArray(seed.comments) ? seed.comments : [];
                 localStorage.setItem(K_COMMENTS, JSON.stringify(c));
             }
+            ensureDefaultAdminUser();
             resolve();
         });
     }
