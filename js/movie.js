@@ -89,3 +89,50 @@ function setRating(n) {
         }
     });
 }
+
+async function sendReview() {
+    const movieId = getMovieId();
+    const text = document.getElementById('reviewText').value.trim();
+
+    if (!text) {
+        alert("Escribe un comentario");
+        return;
+    }
+
+    if (currentRating === 0) {
+        alert("Selecciona una calificación");
+        return;
+    }
+
+    try {
+        const res = await fetch('../api/comentario.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                movie_id: movieId,
+                content: text,
+                rating: currentRating
+            })
+        });
+
+        const data = await res.json();
+
+        if (!data.success) {
+            throw new Error(data.error || "Error al comentar");
+        }
+
+        // reset UI
+        document.getElementById('reviewText').value = '';
+        setRating(0);
+
+        // reload comments
+const res2 = await fetch(`../api/movie.php?id=${movieId}`);
+const data2 = await res2.json();
+renderComments(data2.comments);
+
+     } catch (err) {
+        alert(err.message);
+    }
+}
