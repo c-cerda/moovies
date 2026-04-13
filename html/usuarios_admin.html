@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Usuarios</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        <a href="admin.html" style="color:white; text-decoration:none; margin-left:20px;">← Volver</a>
+        <h2 style="margin:0 auto;">Gestión de Usuarios</h2>
+    </header>
+
+    <main class="admin-container" style="padding: 20px;">
+        <table class="admin-table" style="width:100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background: var(--azul-fuerte); color:white;">
+                    <th>Usuario</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Leche</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tablaUsuariosBody"></tbody>
+        </table>
+    </main>
+
+    <script src="../js/seed-data.js"></script>
+    <script src="../js/storage.js"></script>
+    <script>
+        window.onload = function() {
+            MooviesStorage.ensureLocalJsonSeed().then(() => {
+                const users = MooviesStorage.getUsers();
+                const tbody = document.getElementById('tablaUsuariosBody');
+                users.forEach(u => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${u.nombreUsuario}</td>
+                        <td>${u.nombre}</td>
+                        <td>${u.email}</td>
+                        <td>${u.lecheFavorita}</td>
+                        <td>
+                            <button onclick="eliminarUser('${u.nombreUsuario}')">Borrar</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            });
+        };
+    </script>
+</body>
+</html>

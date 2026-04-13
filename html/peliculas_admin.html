@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Películas</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="admin-body">
+    <header>
+        <a href="admin.html" style="color:white; text-decoration:none; margin-left:20px;">← Volver al Menú Admin</a>
+        <h2 style="margin:0 auto;">Gestión de Películas</h2>
+    </header>
+
+    <main class="admin-container" style="padding: 20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3>Listado de Películas</h3>
+            <button class="btn-moo" onclick="document.getElementById('modalPeli').style.display='block'">+ Nueva Película</button>
+        </div>
+
+        <table class="admin-table" style="width:100%; margin-top:20px; border-collapse: collapse;">
+            <thead>
+                <tr style="background: var(--azul-fuerte); color:white;">
+                    <th>ID</th>
+                    <th>Título</th>
+                    <th>Género</th>
+                    <th>Director</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tablaPelisBody">
+                </tbody>
+        </table>
+    </main>
+
+    <script src="../js/seed-data.js"></script>
+    <script src="../js/storage.js"></script>
+    <script>
+        function cargarTabla() {
+            MooviesStorage.ensureLocalJsonSeed().then(() => {
+                // Obtenemos las películas (esto lee de LocalStorage o del Seed)
+                const movies = MooviesStorage.getMovies ? MooviesStorage.getMovies() : window.MOOVIES_SEED.movies;
+                const tbody = document.getElementById('tablaPelisBody');
+                tbody.innerHTML = '';
+
+                movies.forEach(m => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${m.id}</td>
+                        <td>${m.titulo}</td>
+                        <td>${m.genero}</td>
+                        <td>${m.director}</td>
+                        <td>
+                            <button onclick="editarPeli('${m.id}')">✏️</button>
+                            <button onclick="eliminarPeli('${m.id}')">🗑️</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            });
+        }
+
+        function eliminarPeli(id) {
+            if(confirm('¿Seguro que deseas eliminar esta película?')) {
+                // Aquí llamarías a una función de MooviesStorage para borrar
+                alert('Eliminando ID: ' + id + '. (Implementa la lógica en storage.js para borrar del array)');
+                // Ejemplo: movies = movies.filter(m => m.id !== id); MooviesStorage.saveMovies(movies);
+            }
+        }
+
+        window.onload = cargarTabla;
+    </script>
+</body>
+</html>
