@@ -34,6 +34,10 @@ function renderMovies(list) {
             <p>${m.genres || ''}</p>
         `;
 
+	card.addEventListener('click', () => {
+            window.location.href = `movie.html?id=${m.id}`;
+        });
+
         grid.appendChild(card);
     });
 }
