@@ -2,59 +2,72 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Moovies - Gestión de Películas</title>
+    <title>Admin - Películas</title>
     <link rel="stylesheet" href="../css/styles.css">
 </head>
-<body>
+<body class="admin-body">
     <header>
-        <a href="admin_panel.html" class="header-logo">
-            <img src="../images/logo.png" alt="Moovies Logo">
-            <span>Películas Admin</span>
-        </a>
-        <div class="user-info">Administrador</div>
+        <a href="admin.html" style="color:white; text-decoration:none; margin-left:20px;">← Volver al Menú Admin</a>
+        <h2 style="margin:0 auto;">Gestión de Películas</h2>
     </header>
 
-    <main class="container" style="padding: 20px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
-            <h2>🎬 Inventario de Películas</h2>
-            <button class="btn-moo" onclick="openModal()">+ Añadir Película</button>
+    <main class="admin-container" style="padding: 20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3>Listado de Películas</h3>
+            <button class="btn-moo" onclick="document.getElementById('modalPeli').style.display='block'">+ Nueva Película</button>
         </div>
 
-        <table class="admin-table" style="width:100%; border-collapse: collapse;">
+        <table class="admin-table" style="width:100%; margin-top:20px; border-collapse: collapse;">
             <thead>
-                <tr style="background: var(--azul-fuerte); color: white;">
-                    <th style="padding:12px;">ID</th>
+                <tr style="background: var(--azul-fuerte); color:white;">
+                    <th>ID</th>
                     <th>Título</th>
                     <th>Género</th>
+                    <th>Director</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody id="tablaPelisBody" style="text-align:center;">
+            <tbody id="tablaPelisBody">
                 </tbody>
         </table>
     </main>
 
-    <div id="modalPeli" class="modal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.6); align-items:center; justify-content:center;">
-        <div class="modal-content" style="background:white; padding:25px; border-radius:15px; width:450px; margin: 80px auto; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
-            <h3 id="modalTitle">Editor de Película</h3>
-            <form id="formPeli">
-                <div style="margin-bottom:15px;">
-                    <label>Título de la Obra:</label>
-                    <input type="text" name="titulo" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc;">
-                </div>
-                <div style="margin-bottom:15px;">
-                    <label>Género Principal:</label>
-                    <input type="text" name="genero" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc;">
-                </div>
-                <div style="display:flex; gap:10px; justify-content: flex-end;">
-                    <button type="button" class="btn-moo" style="background:#888" onclick="document.getElementById('modalPeli').style.display='none'">Cerrar</button>
-                    <button type="submit" class="btn-moo" style="background:green">Guardar Cambios</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    <script src="../js/seed-data.js"></script>
+    <script src="../js/storage.js"></script>
+    <script>
+        function cargarTabla() {
+            MooviesStorage.ensureLocalJsonSeed().then(() => {
+                // Obtenemos las películas (esto lee de LocalStorage o del Seed)
+                const movies = MooviesStorage.getMovies ? MooviesStorage.getMovies() : window.MOOVIES_SEED.movies;
+                const tbody = document.getElementById('tablaPelisBody');
+                tbody.innerHTML = '';
 
-    <script src="../js/storage-logic.js"></script>
-    <script src="../js/peliculas_admin.js"></script>
+                movies.forEach(m => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${m.id}</td>
+                        <td>${m.titulo}</td>
+                        <td>${m.genero}</td>
+                        <td>${m.director}</td>
+                        <td>
+                            <button onclick="editarPeli('${m.id}')">✏️</button>
+                            <button onclick="eliminarPeli('${m.id}')">🗑️</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            });
+        }
+
+        function eliminarPeli(id) {
+            if(confirm('¿Seguro que deseas eliminar esta película?')) {
+                // Aquí llamarías a una función de MooviesStorage para borrar
+                alert('Eliminando ID: ' + id + '. (Implementa la lógica en storage.js para borrar del array)');
+                // Ejemplo: movies = movies.filter(m => m.id !== id); MooviesStorage.saveMovies(movies);
+            }
+        }
+
+        window.onload = cargarTabla;
+    </script>
 </body>
 </html>
