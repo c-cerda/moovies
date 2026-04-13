@@ -2,62 +2,129 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Admin - Comentarios</title>
+    <title>Admin - Moderación de Comentarios</title>
     <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        .admin-search-bar {
+            width: 100%;
+            padding: 12px;
+            margin: 20px 0;
+            border: 2px solid var(--celeste-suave);
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
 </head>
 <body class="admin-body">
     <header>
-        <a href="admin.html" style="color:white; text-decoration:none; margin-left:20px;">← Volver</a>
+        <a href="admin.html" style="color:white; text-decoration:none; margin-left:20px;">← Volver al Menú</a>
         <h2 style="margin:0 auto;">Moderación de Comentarios</h2>
     </header>
 
     <main class="admin-container" style="padding: 20px;">
-        <h3>Reseñas de la Comunidad</h3>
-        <table class="admin-table" style="width:100%; border-collapse: collapse; margin-top: 20px;">
-            <thead>
-                <tr style="background: var(--azul-fuerte); color:white;">
-                    <th>Usuario</th>
-                    <th>Película (ID)</th>
-                    <th>Comentario</th>
-                    <th>Leche</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="tablaComentariosBody"></tbody>
-        </table>
+        <section>
+            <h3>Filtro de Búsqueda</h3>
+            <input type="text" id="adminCommentSearch" class="admin-search-bar" 
+                   placeholder="Buscar por nombre de película o nombre de usuario...">
+        </section>
+
+        <section class="admin-table-wrapper">
+            <table class="admin-table" style="width:100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: var(--azul-fuerte); color:white;">
+                        <th>Usuario</th>
+                        <th>Película</th>
+                        <th>Comentario</th>
+                        <th>Calificación</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaComentariosBody">
+                    </tbody>
+            </table>
+            <div id="noResultsMsg" class="no-results" style="display:none;">
+                No se encontraron comentarios que coincidan con la búsqueda.
+            </div>
+        </section>
     </main>
 
     <script src="../js/seed-data.js"></script>
     <script src="../js/storage.js"></script>
     <script>
-        window.onload = function() {
-            MooviesStorage.ensureLocalJsonSeed().then(() => {
-                const comments = MooviesStorage.getComments();
-                const tbody = document.getElementById('tablaComentariosBody');
-                
-                comments.forEach(c => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td style="font-weight:bold;">${c.usuario}</td>
-                        <td>${c.peliculaId}</td>
-                        <td style="font-style:italic;">"${c.comentario}"</td>
-                        <td>${'🥛'.repeat(c.vasosLeche)}</td>
-                        <td>
-                            <button class="btn-moo" style="background:red; padding:5px;" 
-                                    onclick="eliminarComentario('${c.id}')">Eliminar</button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
+        let allComments = [];
+        let allMovies = [];
+
+        // Función para obtener el título de la película por su ID
+        function getMovieTitle(id) {
+            const movie = allMovies.find(m => String(m.id) === String(id));
+            return movie ? movie.titulo : `ID: ${id} (No encontrada)`;
+        }
+
+        async function inicializarAdmin() {
+            await MooviesStorage.ensureLocalJsonSeed();
+            
+            // Cargar datos
+            allComments = MooviesStorage.getComments();
+            // Intentar obtener pelis de storage, si no, del seed global
+            allMovies = MooviesStorage.getMovies ? MooviesStorage.getMovies() : window.MOOVIES_SEED.movies;
+
+            renderTable(allComments);
+
+            // Escuchar el evento de búsqueda
+            document.getElementById('adminCommentSearch').addEventListener('input', function(e) {
+                const term = e.target.value.toLowerCase();
+                const filtered = allComments.filter(c => {
+                    const movieTitle = getMovieTitle(c.peliculaId).toLowerCase();
+                    const userName = c.usuario.toLowerCase();
+                    return movieTitle.includes(term) || userName.includes(term);
                 });
+                renderTable(filtered);
             });
-        };
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('tablaComentariosBody');
+            const noResults = document.getElementById('noResultsMsg');
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                noResults.style.display = 'block';
+                return;
+            }
+            noResults.style.display = 'none';
+
+            data.forEach(c => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-weight:bold; color:var(--azul-fuerte);">${c.usuario}</td>
+                    <td style="color:#555;">${getMovieTitle(c.peliculaId)}</td>
+                    <td style="max-width:300px; font-style:italic;">"${c.comentario}"</td>
+                    <td style="text-align:center;">${'🥛'.repeat(c.vasosLeche)}</td>
+                    <td>
+                        <button class="btn-moo" style="background:#cc0000; padding:5px 10px; font-size:0.8rem;" 
+                                onclick="eliminarComentario('${c.id}')">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
 
         function eliminarComentario(id) {
-            if(confirm('¿Deseas eliminar permanentemente esta reseña?')) {
+            if(confirm('¿Estás seguro de que deseas eliminar este comentario? Esta acción no se puede deshacer.')) {
                 MooviesStorage.deleteCommentById(id);
-                location.reload(); // Recarga para ver el cambio
+                // Actualizar lista local y volver a renderizar
+                allComments = MooviesStorage.getComments();
+                renderTable(allComments);
             }
         }
+
+        window.onload = inicializarAdmin;
     </script>
 </body>
 </html>
