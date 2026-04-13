@@ -30,45 +30,42 @@
 			</div>
 		</div>
 	</div>
-	<script src="../js/seed-data.js"></script>
-	<script src="../js/storage.js"></script>
+
 	<script>
-		(function () {
-			var form = document.getElementById('loginForm');
-			var msg = document.getElementById('authMessage');
-			form.addEventListener('submit', function (e) {
-				e.preventDefault();
-				msg.hidden = true;
-				var email = document.getElementById('loginEmail').value.trim();
-				var password = document.getElementById('loginPassword').value;
-				MooviesStorage.ensureLocalJsonSeed().then(function () {
-					var users = MooviesStorage.getUsers();
-					var found = null;
-					for (var i = 0; i < users.length; i++) {
-						var u = users[i];
-						if (
-							u.email &&
-							u.email.toLowerCase() === email.toLowerCase() &&
-							u.password === password
-						) {
-							found = u;
-							break;
-						}
-					}
-					if (found) {
-						MooviesStorage.setSessionUser({
-							nombreUsuario: found.nombreUsuario || found.nombre,
-							nombre: found.nombre || found.nombreUsuario,
-							email: found.email,
-						});
-						window.location.href = 'catalog.html';
-						return;
-					}
-					msg.textContent = 'Correo o contraseña incorrectos';
-					msg.hidden = false;
+		document.getElementById('loginForm').addEventListener('submit', async function (e) {
+			e.preventDefault();
+			const msg = document.getElementById('authMessage');
+			msg.hidden = true;
+
+			const data = {
+				email: document.getElementById('loginEmail').value.trim(),
+				password: document.getElementById('loginPassword').value
+			};
+
+			try {
+				const res = await fetch('../api/login.php', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(data)
 				});
-			});
-		})();
+
+				const result = await res.json();
+				console.log(result);
+				if (result.success) {
+					window.location.href = 'catalog.html';
+				} else {
+					msg.textContent = result.message;
+					msg.hidden = false;
+				}
+
+			} catch (err) {
+				msg.textContent = 'Error de conexión con el servidor';
+				msg.hidden = false;
+			}
+
+		});
 	</script>
 </body>
 
