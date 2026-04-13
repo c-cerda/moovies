@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Comentarios</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="admin-body">
+    <header>
+        <a href="admin.html" style="color:white; text-decoration:none; margin-left:20px;">← Volver</a>
+        <h2 style="margin:0 auto;">Moderación de Comentarios</h2>
+    </header>
+
+    <main class="admin-container" style="padding: 20px;">
+        <h3>Reseñas de la Comunidad</h3>
+        <table class="admin-table" style="width:100%; border-collapse: collapse; margin-top: 20px;">
+            <thead>
+                <tr style="background: var(--azul-fuerte); color:white;">
+                    <th>Usuario</th>
+                    <th>Película (ID)</th>
+                    <th>Comentario</th>
+                    <th>Leche</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tablaComentariosBody"></tbody>
+        </table>
+    </main>
+
+    <script src="../js/seed-data.js"></script>
+    <script src="../js/storage.js"></script>
+    <script>
+        window.onload = function() {
+            MooviesStorage.ensureLocalJsonSeed().then(() => {
+                const comments = MooviesStorage.getComments();
+                const tbody = document.getElementById('tablaComentariosBody');
+                
+                comments.forEach(c => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="font-weight:bold;">${c.usuario}</td>
+                        <td>${c.peliculaId}</td>
+                        <td style="font-style:italic;">"${c.comentario}"</td>
+                        <td>${'🥛'.repeat(c.vasosLeche)}</td>
+                        <td>
+                            <button class="btn-moo" style="background:red; padding:5px;" 
+                                    onclick="eliminarComentario('${c.id}')">Eliminar</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            });
+        };
+
+        function eliminarComentario(id) {
+            if(confirm('¿Deseas eliminar permanentemente esta reseña?')) {
+                MooviesStorage.deleteCommentById(id);
+                location.reload(); // Recarga para ver el cambio
+            }
+        }
+    </script>
+</body>
+</html>
