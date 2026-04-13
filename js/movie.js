@@ -4,12 +4,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const res = await fetch(`../api/movie.php?id=${id}`);
     const data = await res.json();
 
+    console.log(data);
     if (!data.success) {
         alert("Error cargando película");
         return;
     }
 
-    renderMovie(data.movie,data.cast);
+renderMovie(data.movie);
+renderComments(data.comments);
 });
 
 function getMovieId() {
@@ -34,16 +36,56 @@ function renderMovie(m, cast = {}) {
     }
 
     // CAST
-    document.getElementById('modalDirector').textContent =
-        (cast.director || []).join(', ');
+document.getElementById('modalDirector').textContent =
+    (m.directors || '').split(',').join(', ') || '—';
 
-    document.getElementById('modalActores').textContent =
-        (cast.actor || []).join(', ');
+document.getElementById('modalActores').textContent =
+    (m.actors || '').split(',').join(', ') || '—';
 
-    document.getElementById('modalCompositor').textContent =
-        (cast.composer || []).join(', ');
+document.getElementById('modalCompositor').textContent =
+    (m.composers || '').split(',').join(', ') || '—';
 
-    document.getElementById('modalGuionistas').textContent =
-        (cast.writer || []).join(', ');
+document.getElementById('modalGuionistas').textContent =
+    (m.writers || '').split(',').join(', ') || '—';
+
 }
 
+function renderComments(comments) {
+    const container = document.getElementById('commentsList');
+    container.innerHTML = '';
+
+    if (!comments || comments.length === 0) {
+        container.innerHTML = '<p>No hay comentarios aún.</p>';
+        return;
+    }
+
+    comments.forEach(c => {
+        const div = document.createElement('div');
+        div.className = 'comment-item';
+
+        div.innerHTML = `
+            <strong>${c.username}</strong>
+            <p>${c.comment}</p>
+            <p>${'🥛'.repeat(c.rating)}</p>
+        `;
+
+        container.appendChild(div);
+    });
+}
+
+// rating 
+let currentRating = 0;
+
+function setRating(n) {
+    currentRating = n;
+
+    const glasses = document.querySelectorAll('#milkRatingRow .glass');
+
+    glasses.forEach((g, index) => {
+        if (index < n) {
+            g.classList.add('active');
+        } else {
+            g.classList.remove('active');
+        }
+    });
+}

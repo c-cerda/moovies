@@ -7,46 +7,26 @@ try {
 
 	$id = $_GET['id'];
 
-	$stmt = $db->prepare("
-        SELECT 
-            m.id,
-            m.title,
-            m.description,
-            m.summary,
-            m.image,
-            m.trailer,
-            GROUP_CONCAT(DISTINCT g.type) AS genres
-        FROM movies m
-        LEFT JOIN movies_genres mg ON m.id = mg.movie_id
-        LEFT JOIN genres g ON mg.genre_id = g.id
-        WHERE m.id = ?
-        GROUP BY m.id
-    ");
-
+	$stmt = $db->prepare("CALL get_full_movie(?)");
 	$stmt->execute([$id]);
+
+	// FIRST result (movie)
 	$movie = $stmt->fetch(PDO::FETCH_ASSOC);
 
-	$stmt = $db->prepare("CALL get_movie_cast(?)");
-	$stmt->execute([$id]);
+	// move to next result
+	$stmt->nextRowset();
 
-	$cast = $stmt->fetchAll(PDO::FETCH_ASSOC);
-	$stmt->closeCursor();
-
-	$castFormatted = [];
-	foreach ($cast as $row) {
-		$role = strtolower($row['role']); // actor, director, etc
-		$people = explode(',', $row['people']);
-
-		$castFormatted[$role] = $people;
-	}
+	// SECOND result (comments)
+	$comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 	echo json_encode([
 		"success" => true,
 		"movie" => $movie,
-		"cast" => $castFormatted
+		"comments" => $comments
 	]);
 } catch (Exception $e) {
 	echo json_encode([
-		"success" => false
+		"success" => false,
+		"error" => $e->getMessage()
 	]);
 }
