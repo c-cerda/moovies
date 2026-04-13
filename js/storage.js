@@ -1,9 +1,7 @@
 /**
  * Persistencia local (solo navegador): los comentarios se guardan como el mismo array
  * que define json/comments.json, pero en localStorage (clave: moovies_comments_v6).
- * JavaScript en el cliente no puede sobrescribir archivos .json del proyecto en disco
- * sin descarga ni servidor; por eso no hay PHP ni escritura directa a json/comments.json.
- * Opcional: MooviesStorage.downloadJsonFile() para respaldo manual.
+ * JavaScript en el cliente no puede sobrescribir archivos .json del proyecto en disco.
  */
 (function (global) {
     var K_USERS = 'moovies_users_v4';
@@ -71,7 +69,6 @@
         });
     }
 
-    /** Guarda el array de comentarios (misma forma que json/comments.json) solo en localStorage. */
     function saveComments(comments) {
         localStorage.setItem(K_COMMENTS, JSON.stringify(comments));
     }
@@ -133,7 +130,6 @@
     function toggleFavoriteMovie(peliculaId) {
         var session = getSessionUser();
         if (!session || !session.nombreUsuario) throw new Error('Inicia sesión para guardar favoritos');
-        if (!isRegisteredUsername(session.nombreUsuario)) throw new Error('Cuenta no registrada');
         var pid = String(peliculaId);
         var list = getFavoritesForUser(session.nombreUsuario);
         var exists = false;
@@ -150,16 +146,6 @@
         return !exists;
     }
 
-    function getRegisteredUsernamesLower() {
-        var users = getUsers();
-        var set = {};
-        for (var i = 0; i < users.length; i++) {
-            var nu = users[i].nombreUsuario;
-            if (nu) set[String(nu).toLowerCase()] = true;
-        }
-        return set;
-    }
-
     function isRegisteredUsername(nombreUsuario) {
         if (!nombreUsuario) return false;
         var want = String(nombreUsuario).toLowerCase();
@@ -170,13 +156,6 @@
             }
         }
         return false;
-    }
-
-    function filterCommentsLinkedToUsers(comments) {
-        var set = getRegisteredUsernamesLower();
-        return (comments || []).filter(function (c) {
-            return c && c.usuario && set[String(c.usuario).toLowerCase()];
-        });
     }
 
     function getDisplayNameForUsuario(nombreUsuario) {
@@ -203,19 +182,6 @@
         return null;
     }
 
-    function updateUserDescripcion(nombreUsuario, descripcion) {
-        var users = getUsers();
-        var want = String(nombreUsuario).toLowerCase();
-        for (var i = 0; i < users.length; i++) {
-            if (users[i].nombreUsuario && String(users[i].nombreUsuario).toLowerCase() === want) {
-                users[i].descripcion = descripcion == null ? '' : String(descripcion);
-                saveUsers(users);
-                return users[i];
-            }
-        }
-        throw new Error('Usuario no encontrado');
-    }
-
     function replaceUsernameInVoteArrays(arr, oldU, newU) {
         var ol = String(oldU).toLowerCase();
         for (var i = 0; i < arr.length; i++) {
@@ -236,108 +202,68 @@
             }
         }
         if (idx < 0) throw new Error('Usuario no encontrado');
+
         var nu = patch.nombreUsuario != null ? String(patch.nombreUsuario).trim() : users[idx].nombreUsuario;
         var em = patch.email != null ? String(patch.email).trim() : users[idx].email;
         var nm = patch.nombre != null ? String(patch.nombre).trim() : users[idx].nombre;
         var leche = patch.lecheFavorita != null ? patch.lecheFavorita : users[idx].lecheFavorita;
+
         if (!nu || nu.length < 3) throw new Error('Nombre de usuario inválido');
-        if (!em) throw new Error('Correo inválido');
+        
         var nuLower = nu.toLowerCase();
-        var emLower = em.toLowerCase();
         for (var j = 0; j < users.length; j++) {
             if (j === idx) continue;
             if (users[j].nombreUsuario && String(users[j].nombreUsuario).toLowerCase() === nuLower) {
                 throw new Error('Ese nombre de usuario ya está en uso');
             }
-            if (users[j].email && String(users[j].email).toLowerCase() === emLower) {
-                throw new Error('Ese correo ya está registrado');
-            }
         }
-        var newPass = patch.password != null ? String(patch.password) : null;
-        if (newPass !== null && newPass !== '' && newPass.length < 4) {
-            throw new Error('La contraseña debe tener al menos 4 caracteres');
-        }
+
         var prevUser = users[idx].nombreUsuario;
         if (prevUser !== nu) {
+            // Actualizar usuario en comentarios y votos
             var comments = getComments();
-            for (var k = 0; k < comments.length; k++) {
-                var c = comments[k];
-                if (!c) continue;
-                if (String(c.usuario).toLowerCase() === oldLower) {
-                    c.usuario = nu;
-                }
+            comments.forEach(function (c) {
+                if (String(c.usuario).toLowerCase() === oldLower) c.usuario = nu;
                 replaceUsernameInVoteArrays(c.likedBy, prevUser, nu);
                 replaceUsernameInVoteArrays(c.dislikedBy, prevUser, nu);
-                if (Array.isArray(c.respuestas)) {
-                    for (var r = 0; r < c.respuestas.length; r++) {
-                        var rep = c.respuestas[r];
-                        if (!rep) continue;
-                        if (String(rep.usuario).toLowerCase() === oldLower) {
-                            rep.usuario = nu;
-                        }
+                if (c.respuestas) {
+                    c.respuestas.forEach(function (rep) {
+                        if (String(rep.usuario).toLowerCase() === oldLower) rep.usuario = nu;
                         replaceUsernameInVoteArrays(rep.likedBy, prevUser, nu);
                         replaceUsernameInVoteArrays(rep.dislikedBy, prevUser, nu);
-                    }
+                    });
                 }
-            }
+            });
             saveComments(comments);
+
+            // Migrar favoritos
             var favoritesMap = getFavoritesMap();
-            var oldFavKey = String(prevUser).toLowerCase();
-            var newFavKey = String(nu).toLowerCase();
-            if (favoritesMap[oldFavKey]) {
-                favoritesMap[newFavKey] = normalizeMovieIdList(favoritesMap[oldFavKey]);
-                delete favoritesMap[oldFavKey];
+            if (favoritesMap[oldLower]) {
+                favoritesMap[nuLower] = favoritesMap[oldLower];
+                delete favoritesMap[oldLower];
                 saveFavoritesMap(favoritesMap);
             }
         }
+
         users[idx].nombreUsuario = nu;
         users[idx].nombre = nm;
         users[idx].email = em;
         users[idx].lecheFavorita = leche;
-        if (newPass !== null && newPass !== '') {
-            users[idx].password = newPass;
-        }
+        if (patch.password) users[idx].password = patch.password;
+
         saveUsers(users);
         return users[idx];
-    }
-
-    /** Cuenta admin por defecto (correo o usuario "admin", contraseña 1234) si no existe. */
-    function ensureDefaultAdminUser() {
-        var users = getUsers();
-        var i;
-        for (i = 0; i < users.length; i++) {
-            var u = users[i];
-            if (!u) continue;
-            var nu = u.nombreUsuario && String(u.nombreUsuario).toLowerCase() === 'admin';
-            var em = u.email && String(u.email).toLowerCase() === 'admin';
-            if ((nu || em) && u.password === '1234') {
-                return;
-            }
-        }
-        users.push({
-            id: 'u_admin_seed',
-            nombreUsuario: 'admin',
-            nombre: 'Administrador',
-            email: 'admin',
-            lecheFavorita: 'Entera',
-            password: '1234',
-            descripcion: '',
-        });
-        saveUsers(users);
     }
 
     function ensureLocalJsonSeed() {
         return new Promise(function (resolve) {
             var seed = global.MOOVIES_SEED || {};
             if (localStorage.getItem(K_USERS) === null) {
-                var u = Array.isArray(seed.users) ? seed.users : [];
-                localStorage.setItem(K_USERS, JSON.stringify(u));
+                saveUsers(Array.isArray(seed.users) ? seed.users : []);
             }
             if (localStorage.getItem(K_COMMENTS) === null) {
-                var c = Array.isArray(seed.comments) ? seed.comments : [];
-                localStorage.setItem(K_COMMENTS, JSON.stringify(c));
+                saveComments(Array.isArray(seed.comments) ? seed.comments : []);
             }
-            ensureDefaultAdminUser();
             resolve();
         });
     }
@@ -361,10 +287,7 @@
 
     function hasUserInList(arr, nombreUsuario) {
         var lu = String(nombreUsuario).toLowerCase();
-        for (var i = 0; i < arr.length; i++) {
-            if (String(arr[i]).toLowerCase() === lu) return true;
-        }
-        return false;
+        return arr.some(function(u) { return String(u).toLowerCase() === lu; });
     }
 
     function removeUserFromList(arr, nombreUsuario) {
@@ -376,7 +299,7 @@
 
     function rewriteArray(target, newValues) {
         target.length = 0;
-        for (var i = 0; i < newValues.length; i++) target.push(newValues[i]);
+        newValues.forEach(function(v) { target.push(v); });
     }
 
     function toggleVoteOnArrays(likedBy, dislikedBy, nombreUsuario, kind) {
@@ -388,9 +311,7 @@
                 rewriteArray(dislikedBy, removeUserFromList(dislikedBy, u));
                 likedBy.push(u);
             }
-            return;
-        }
-        if (kind === 'dislike') {
+        } else if (kind === 'dislike') {
             if (hasUserInList(dislikedBy, u)) {
                 rewriteArray(dislikedBy, removeUserFromList(dislikedBy, u));
             } else {
@@ -403,121 +324,35 @@
     function toggleCommentVote(commentId, replyId, kind) {
         var session = getSessionUser();
         if (!session || !session.nombreUsuario) throw new Error('Inicia sesión para votar');
-        if (!isRegisteredUsername(session.nombreUsuario)) throw new Error('Cuenta no registrada');
-        var u = session.nombreUsuario;
+        
         var comments = getComments();
-        var ci = -1;
-        for (var i = 0; i < comments.length; i++) {
-            if (comments[i] && String(comments[i].id) === String(commentId)) {
-                ci = i;
-                break;
-            }
-        }
-        if (ci < 0) throw new Error('Comentario no encontrado');
-        normalizeComment(comments[ci]);
-        if (!replyId || replyId === '') {
-            toggleVoteOnArrays(comments[ci].likedBy, comments[ci].dislikedBy, u, kind);
-            saveComments(comments);
-            return comments[ci];
-        }
-        var resp = comments[ci].respuestas;
-        var ri = -1;
-        for (var r = 0; r < resp.length; r++) {
-            if (resp[r] && String(resp[r].id) === String(replyId)) {
-                ri = r;
-                break;
-            }
-        }
-        if (ri < 0) throw new Error('Respuesta no encontrada');
-        normalizeReply(resp[ri]);
-        toggleVoteOnArrays(resp[ri].likedBy, resp[ri].dislikedBy, u, kind);
-        saveComments(comments);
-        return comments[ci];
-    }
+        var comment = comments.find(function(c) { return String(c.id) === String(commentId); });
+        if (!comment) throw new Error('Comentario no encontrado');
 
-    function findCommentIndexForUserAndMovie(peliculaId, nombreUsuario) {
-        if (!nombreUsuario) return -1;
-        var want = String(nombreUsuario).toLowerCase();
-        var pid = String(peliculaId);
-        var comments = getComments();
-        for (var i = 0; i < comments.length; i++) {
-            if (
-                comments[i] &&
-                String(comments[i].peliculaId) === pid &&
-                String(comments[i].usuario).toLowerCase() === want
-            ) {
-                return i;
-            }
+        if (!replyId) {
+            toggleVoteOnArrays(comment.likedBy, comment.dislikedBy, session.nombreUsuario, kind);
+        } else {
+            var reply = comment.respuestas.find(function(r) { return String(r.id) === String(replyId); });
+            if (!reply) throw new Error('Respuesta no encontrada');
+            toggleVoteOnArrays(reply.likedBy, reply.dislikedBy, session.nombreUsuario, kind);
         }
-        return -1;
-    }
 
-    function updateCommentById(commentId, patch) {
-        var session = getSessionUser();
-        if (!session || !session.nombreUsuario) {
-            throw new Error('Sesión inválida');
-        }
-        var comments = getComments();
-        var idx = -1;
-        for (var i = 0; i < comments.length; i++) {
-            if (comments[i] && String(comments[i].id) === String(commentId)) {
-                idx = i;
-                break;
-            }
-        }
-        if (idx < 0) throw new Error('Comentario no encontrado');
-        if (String(comments[idx].usuario).toLowerCase() !== String(session.nombreUsuario).toLowerCase()) {
-            throw new Error('No puedes editar este comentario');
-        }
-        if (patch.comentario != null) {
-            comments[idx].comentario = String(patch.comentario);
-        }
-        if (patch.vasosLeche != null) {
-            comments[idx].vasosLeche = parseInt(patch.vasosLeche, 10) || 0;
-        }
-        comments[idx].fecha = new Date().toISOString();
         saveComments(comments);
-        return comments[idx];
-    }
-
-    function deleteCommentById(commentId) {
-        var session = getSessionUser();
-        if (!session || !session.nombreUsuario) {
-            throw new Error('Sesión inválida');
-        }
-        var comments = getComments();
-        var idx = -1;
-        for (var i = 0; i < comments.length; i++) {
-            if (comments[i] && String(comments[i].id) === String(commentId)) {
-                idx = i;
-                break;
-            }
-        }
-        if (idx < 0) throw new Error('Comentario no encontrado');
-        if (String(comments[idx].usuario).toLowerCase() !== String(session.nombreUsuario).toLowerCase()) {
-            throw new Error('No puedes borrar este comentario');
-        }
-        comments.splice(idx, 1);
-        saveComments(comments);
+        return comment;
     }
 
     function addComment(entry) {
         var session = getSessionUser();
-        if (!session || !session.nombreUsuario) {
-            throw new Error('Sesión inválida');
-        }
-        if (!isRegisteredUsername(session.nombreUsuario)) {
-            throw new Error('Tu cuenta no está registrada');
-        }
-        var pid = String(entry.peliculaId);
+        if (!session) throw new Error('Sesión inválida');
+        
         var comments = getComments();
         var row = {
-            id: entry.id || 'c_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8),
-            peliculaId: pid,
+            id: 'c_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5),
+            peliculaId: String(entry.peliculaId),
             usuario: session.nombreUsuario,
             comentario: entry.comentario,
             vasosLeche: parseInt(entry.vasosLeche, 10) || 0,
-            fecha: entry.fecha || new Date().toISOString(),
+            fecha: new Date().toISOString(),
             likedBy: [],
             dislikedBy: [],
             respuestas: [],
@@ -537,21 +372,15 @@
         setSessionUser: setSessionUser,
         clearMooviesSession: clearMooviesSession,
         addComment: addComment,
-        filterCommentsLinkedToUsers: filterCommentsLinkedToUsers,
         getDisplayNameForUsuario: getDisplayNameForUsuario,
         getUserRecordByUsername: getUserRecordByUsername,
-        updateUserDescripcion: updateUserDescripcion,
         updateAccountForUsername: updateAccountForUsername,
-        findCommentIndexForUserAndMovie: findCommentIndexForUserAndMovie,
-        updateCommentById: updateCommentById,
-        deleteCommentById: deleteCommentById,
         toggleCommentVote: toggleCommentVote,
         getFavoritesForUser: getFavoritesForUser,
         setFavoritesForUser: setFavoritesForUser,
         isFavoriteMovie: isFavoriteMovie,
         toggleFavoriteMovie: toggleFavoriteMovie,
-        isRegisteredUsername: isRegisteredUsername,
         downloadJsonFile: downloadJsonFile,
-        normalizeComment: normalizeComment,
+        normalizeComment: normalizeComment
     };
 })(typeof window !== 'undefined' ? window : this);

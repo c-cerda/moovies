@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOOVIES - Panel de Administración</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+
+<body class="admin-body">
+    <header>
+        <a href="index.html" class="header-logo">
+            <img src="../images/MOOVIES_icon.png" alt="Logo">
+        </a>
+        <div class="user-menu">
+            <div class="user-info" id="adminGreeting">Panel de Control ▼</div>
+            <div id="logoutMenu" class="dropdown-content">
+                <a href="catalog.html">Volver al Catálogo</a>
+                <a href="#" onclick="logout(event)">Cerrar sesión</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="admin-container">
+        <h1 class="catalog-title">Gestión de Contenido</h1>
+
+        <section class="admin-stats">
+            <div class="stat-card">
+                <h3>Películas</h3>
+                <p id="countMovies">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Reseñas</h3>
+                <p id="countComments">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Usuarios</h3>
+                <p id="countUsers">0</p>
+            </div>
+        </section>
+
+        <section class="admin-actions">
+            <button class="btn-moo" onclick="openAddMovieModal()">+ Añadir Nueva Película</button>
+            <button class="btn-moo btn-secondary" onclick="exportData()">Descargar Backup JSON</button>
+        </section>
+
+        <section class="admin-table-wrapper">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>Género</th>
+                        <th>Director</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="adminTableBody">
+                    </tbody>
+            </table>
+        </section>
+    </main>
+
+    <div id="movieModal" class="modal">
+        <div class="modal-content profile-modal-box">
+            <span class="close-btn" onclick="closeMovieModal()">&times;</span>
+            <h2 id="modalTitle" class="profile-modal-title">Añadir Película</h2>
+            <form id="movieForm">
+                <label class="profile-label" for="movieTitle">Título</label>
+                <input type="text" id="movieTitle" required>
+
+                <label class="profile-label" for="movieGenre">Género</label>
+                <input type="text" id="movieGenre" required>
+
+                <label class="profile-label" for="movieDirector">Director</label>
+                <input type="text" id="movieDirector" required>
+
+                <label class="profile-label" for="movieImg">URL de Imagen (Póster)</label>
+                <input type="url" id="movieImg" placeholder="https://image.tmdb.org/...">
+
+                <label class="profile-label" for="movieDesc">Descripción</label>
+                <textarea id="movieDesc" rows="4"></textarea>
+
+                <button type="submit" class="btn-moo">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/seed-data.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+
+</html>
