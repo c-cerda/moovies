@@ -63,11 +63,19 @@ function renderComments(comments) {
         const div = document.createElement('div');
         div.className = 'comment-item';
 
-        div.innerHTML = `
-            <strong>${c.username}</strong>
-            <p>${c.comment}</p>
-            <p>${'🥛'.repeat(c.rating)}</p>
-        `;
+div.innerHTML = `
+    <strong>${c.username}</strong>
+    <p>${c.comment}</p>
+    <p>${'🥛'.repeat(c.rating)}</p>
+
+    <button onclick="vote(${c.id}, 1)">
+        👍 ${c.likes || 0}
+    </button>
+
+    <button onclick="vote(${c.id}, -1)">
+        👎 ${c.dislikes || 0}
+    </button>
+`;
 
         container.appendChild(div);
     });
@@ -88,6 +96,23 @@ function setRating(n) {
             g.classList.remove('active');
         }
     });
+}
+
+async function vote(commentId, value) {
+    await fetch('../api/vote.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            comment_id: commentId,
+            vote: value
+        })
+    });
+
+    // reload comments only
+    const id = getMovieId();
+    const res = await fetch(`../api/movie.php?id=${id}`);
+    const data = await res.json();
+    renderComments(data.comments);
 }
 
 async function sendReview() {

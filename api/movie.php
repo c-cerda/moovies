@@ -5,10 +5,17 @@ header('Content-Type: application/json');
 try {
 	$db = (new ConexionBD())->getConexion();
 
-	$id = $_GET['id'];
+	session_start();
 
-	$stmt = $db->prepare("CALL get_full_movie(?)");
-	$stmt->execute([$id]);
+	$currentUserId = $_SESSION['user_id'] ?? null;
+	$id = $_GET['id'] ?? null;
+
+	if (!$id) {
+		throw new Exception("Missing movie ID");
+	}
+
+	$stmt = $db->prepare("CALL get_full_movie(?,?)");
+	$stmt->execute([$id, $currentUserId]);
 
 	// FIRST result (movie)
 	$movie = $stmt->fetch(PDO::FETCH_ASSOC);
