@@ -8,38 +8,81 @@
 </head>
 
 <body>
-
-	<header>
-		<a href="catalog.html">⬅ Volver</a>
+	<header class="btn-back">
+		<a href=" catalog.html">⬅ Volver</a>
 	</header>
 
-	<main id="movie-container">
+	<div class="modal-content modal-content--wide">
+		<div class="modal-body modal-body--columns">
 
-		<img id="movieImage" />
+			<!-- LEFT COLUMN -->
+			<div class="modal-image modal-image--stacked">
+				<img id="modalImg" src="" alt="Poster">
 
-		<h1 id="movieTitle"></h1>
-		<p id="movieGenres"></p>
+				<a id="modalTrailerBtn" class="btn-trailer" target="_blank">
+					VER TRAILER
+				</a>
 
-		<h3>Sinopsis</h3>
-		<p id="movieDescription"></p>
+				<dl class="modal-meta modal-meta--under-poster">
+					<div>
+						<dt>Director</dt>
+						<dd id="modalDirector"></dd>
+					</div>
+					<div>
+						<dt>Compositor</dt>
+						<dd id="modalCompositor"></dd>
+					</div>
+					<div>
+						<dt>Guionistas</dt>
+						<dd id="modalGuionistas"></dd>
+					</div>
+					<div>
+						<dt>Actores principales</dt>
+						<dd id="modalActores"></dd>
+					</div>
+				</dl>
+			</div>
 
+			<!-- CENTER COLUMN -->
+			<div class="modal-review-column">
+				<h2 id="modalTitle"></h2>
+				<p id="modalGenre" class="modal-genre"></p>
 
-		<h3>Trailer</h3>
-		<a id="movieTrailer" target="_blank">Ver trailer</a>
+				<h3 class="modal-subheading">Sinopsis</h3>
+				<textarea id="modalSynopsis"
+					class="modal-synopsis-area modal-synopsis-area--above-review"
+					readonly></textarea>
 
-		<h3>Director</h3>
-		<p id="movieDirector"></p>
-		<h3>Escritores</h3>
-		<p id="movieWriter"></p>
-		<h3>Compositores</h3>
-		<p id="movieComposer"></p>
-		<h3>Actores</h3>
-		<p id="movieActors"></p>
+				<!-- REVIEW BOX -->
+				<div class="modal-review-box">
+					<h3 class="modal-subheading">Tu calificación</h3>
 
-		<h3>Comentarios</h3>
-		<div id="comments"></div>
+					<div class="milk-rating" id="milkRatingRow">
+						<span class="glass" onclick="setRating(1)">🥛</span>
+						<span class="glass" onclick="setRating(2)">🥛</span>
+						<span class="glass" onclick="setRating(3)">🥛</span>
+						<span class="glass" onclick="setRating(4)">🥛</span>
+						<span class="glass" onclick="setRating(5)">🥛</span>
+					</div>
 
-	</main>
+					<textarea id="reviewText" class="review-textarea"
+						placeholder="Escribe tu reseña..."></textarea>
+
+					<button class="btn-send" onclick="sendReview()">
+						Enviar reseña
+					</button>
+				</div>
+			</div>
+
+			<!-- RIGHT COLUMN -->
+			<aside class="modal-comments-column">
+				<h3 class="comments-heading">Comentarios</h3>
+				<div id="commentsList" class="comments-list"></div>
+			</aside>
+
+		</div>
+	</div>
+	</div>
 
 	<script src="../js/api.js"></script>
 	<script src="../js/movie.js"></script>

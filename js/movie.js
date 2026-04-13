@@ -18,23 +18,32 @@ function getMovieId() {
 }
 
 function renderMovie(m, cast = {}) {
-    document.getElementById('movieTitle').textContent = m.title;
+    document.getElementById('modalTitle').textContent = m.title;
+    document.getElementById('modalGenre').textContent = m.genres;
 
-    document.getElementById('movieGenres').textContent = m.genres;
-    document.getElementById('movieDescription').textContent = m.description;
+    document.getElementById('modalSynopsis').value = m.description;
 
-    // cast
-    document.getElementById('movieDirector').textContent =
+    document.getElementById('modalImg').src = m.image;
+
+    const trailer = document.getElementById('modalTrailerBtn');
+    if (m.trailer) {
+        trailer.href = m.trailer;
+        trailer.style.display = 'inline-flex';
+    } else {
+        trailer.style.display = 'none';
+    }
+
+    // CAST
+    document.getElementById('modalDirector').textContent =
         (cast.director || []).join(', ');
 
-    document.getElementById('movieActors').textContent =
+    document.getElementById('modalActores').textContent =
         (cast.actor || []).join(', ');
 
-    document.getElementById('movieComposer').textContent =
+    document.getElementById('modalCompositor').textContent =
         (cast.composer || []).join(', ');
 
-    document.getElementById('movieWriter').textContent =
+    document.getElementById('modalGuionistas').textContent =
         (cast.writer || []).join(', ');
-
 }
 
