@@ -313,7 +313,7 @@ textarea {
 }
 
 .btn-back {
-	background: #f1f1f1;
+	background: #003399;
 	color: var(--azul-fuerte);
 	border: none;
 	padding: 15px 25px;
@@ -338,6 +338,10 @@ textarea {
 	font-size: 1.1rem;
 	font-weight: bold;
 	transition: 0.3s;
+}
+
+a:visited {
+	color: black;
 }
 
 .btn-send:hover {
