@@ -1,3 +1,5 @@
+// for deletion ...
+
 /**
  * Datos iniciales embebidos (file://). Mantener alineado con JSON/*.json
  */

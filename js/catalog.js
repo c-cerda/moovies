@@ -2,6 +2,7 @@ let movies = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
     await loadMovies();
+    loadUser();
     setupEvents();
 });
 
@@ -88,3 +89,51 @@ function filterMovies() {
 function openMovie(id) {
     alert("Movie ID: " + id);
 }
+
+
+// user 
+async function loadUser() {
+    try {
+        const res = await fetch('../api/me.php');
+        const data = await res.json();
+
+        const greeting = document.getElementById('userGreeting');
+
+        if (!data.logged) {
+            greeting.textContent = "Iniciar sesión";
+            greeting.onclick = () => window.location.href = "login.html";
+            return;
+        }
+
+        greeting.textContent = `Hola, ${data.user.username} ▼`;
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+function toggleMenu() {
+    const menu = document.getElementById('logoutMenu');
+    menu.classList.toggle('show');
+}
+
+window.addEventListener('click', function (e) {
+    if (!e.target.closest('.user-menu')) {
+        document.getElementById('logoutMenu').classList.remove('show');
+    }
+});
+
+async function logout(e) {
+    e.preventDefault();
+
+    await fetch('../api/util/logout.php');
+
+    window.location.href = "index.html";
+}
+
+function openMyProfile(e) {
+    e.preventDefault();
+    window.location.href = "user.html";
+}
+
+

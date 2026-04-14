@@ -1,3 +1,5 @@
+// for deletion ...
+
 /**
  * Persistencia local (solo navegador): los comentarios se guardan como el mismo array
  * que define json/comments.json, pero en localStorage (clave: moovies_comments_v6).

@@ -1,3 +1,6 @@
+// for deletion ...
+
+
 const MOVIES_JSON = '../json/movies.json';
 
 let moviesCache = [];
