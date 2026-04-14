@@ -63,22 +63,123 @@ function renderComments(comments) {
         const div = document.createElement('div');
         div.className = 'comment-item';
 
-div.innerHTML = `
-    <strong>${c.username}</strong>
-    <p>${c.comment}</p>
-    <p>${'🥛'.repeat(c.rating)}</p>
+        // 🧠 botones condicionales (FUERA del template)
+        let ownerButtons = '';
+        if (Number(c.is_owner) === 1) {
+            ownerButtons = `
+                <button onclick="editComment(${c.id})">✏️</button>
+                <button onclick="deleteComment(${c.id})">🗑️</button>
+            `;
+        }
 
-    <button onclick="vote(${c.id}, 1)">
-        👍 ${c.likes || 0}
-    </button>
+        div.innerHTML = `
+            <strong>${c.username}</strong>
+            <p>${c.comment}</p>
+            <p>${'🥛'.repeat(c.rating)}</p>
 
-    <button onclick="vote(${c.id}, -1)">
-        👎 ${c.dislikes || 0}
-    </button>
-`;
+            <button onclick="vote(${c.id}, 1)">
+                👍 ${c.likes || 0}
+            </button>
+
+            <button onclick="vote(${c.id}, -1)">
+                👎 ${c.dislikes || 0}
+            </button>
+
+            ${ownerButtons}
+        `;
 
         container.appendChild(div);
     });
+}
+
+async function deleteComment(id) {
+    if (!confirm("¿Eliminar comentario?")) return;
+
+    const res = await fetch('../api/comentario.php', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ comment_id: id })
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+        alert(data.error);
+        return;
+    }
+
+    location.reload();
+}
+
+async function deleteComment(id) {
+    if (!confirm("¿Eliminar comentario?")) return;
+
+    const res = await fetch('../api/comentario.php', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ comment_id: id })
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+        alert(data.error);
+        return;
+    }
+
+    location.reload();
+}
+
+async function editComment(id) {
+    const newText = prompt("Nuevo comentario:");
+    const newRating = prompt("Nueva calificación (1-5):");
+
+    if (!newText || !newRating) return;
+
+    const res = await fetch('../api/comentario.php', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            comment_id: id,
+            content: newText,
+            rating: parseInt(newRating)
+        })
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+        alert(data.error);
+        return;
+    }
+
+    location.reload();
+}
+
+async function editComment(id) {
+    const newText = prompt("Nuevo comentario:");
+    const newRating = prompt("Nueva calificación (1-5):");
+
+    if (!newText || !newRating) return;
+
+    const res = await fetch('../api/comentario.php', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            comment_id: id,
+            content: newText,
+            rating: parseInt(newRating)
+        })
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+        alert(data.error);
+        return;
+    }
+
+    location.reload();
 }
 
 // rating 

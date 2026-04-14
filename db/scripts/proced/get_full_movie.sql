@@ -32,6 +32,7 @@ SELECT
     c.id,
     c.content AS comment,
     c.rating,
+    c.user_id,
     u.username,
 
     SUM(CASE WHEN cv.vote = 1 THEN 1 ELSE 0 END) AS likes,
@@ -40,7 +41,12 @@ SELECT
     MAX(CASE 
         WHEN cv.user_id = currentUserId THEN cv.vote 
         ELSE 0 
-    END) AS user_vote
+    END) AS user_vote,
+
+    CASE 
+        WHEN c.user_id = currentUserId THEN 1 
+        ELSE 0 
+    END AS is_owner
 
 FROM comments c
 JOIN users u ON c.user_id = u.id
