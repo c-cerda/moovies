@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Elenco</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="admin-body">
+    <header>
+        <a href="admin.html" style="color:white; text-decoration:none; margin-left:20px;">← Volver</a>
+        <h2 style="margin:0 auto;">Gestión de Elenco</h2>
+    </header>
+
+    <main class="admin-container" style="padding: 20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3>Actores y Reparto</h3>
+            <button class="btn-moo">Registrar Nuevo Actor</button>
+        </div>
+
+        <table class="admin-table" style="width:100%; border-collapse: collapse; margin-top: 20px;">
+            <thead>
+                <tr style="background: var(--azul-fuerte); color:white;">
+                    <th>Actor / Actriz</th>
+                    <th>Película Asociada</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tablaCastBody"></tbody>
+        </table>
+    </main>
+
+    <script src="../js/seed-data.js"></script>
+    <script src="../js/storage.js"></script>
+    <script>
+        window.onload = function() {
+            MooviesStorage.ensureLocalJsonSeed().then(() => {
+                // Obtenemos pelis para extraer el cast
+                const movies = MooviesStorage.getMovies ? MooviesStorage.getMovies() : window.MOOVIES_SEED.movies;
+                const tbody = document.getElementById('tablaCastBody');
+                
+                movies.forEach(m => {
+                    if (m.actores) {
+                        const listaActores = m.actores.split(',');
+                        listaActores.forEach(actor => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>${actor.trim()}</td>
+                                <td>${m.titulo}</td>
+                                <td>
+                                    <button onclick="alert('Editar actor')">✏️</button>
+                                    <button onclick="alert('Eliminar vínculo')">🗑️</button>
+                                </td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                    }
+                });
+            });
+        };
+    </script>
+</body>
+</html>

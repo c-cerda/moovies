@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Usuarios</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        .admin-actions-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+        /* Estilos para el modal reutilizados de tu diseño */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
+        .modal-content { background-color: white; margin: 5% auto; padding: 20px; border-radius: 10px; width: 400px; position: relative; }
+        .close-btn { position: absolute; right: 20px; top: 10px; cursor: pointer; font-size: 24px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input, .form-group select { width: 100%; padding: 8px; box-sizing: border-box; }
+    </style>
+</head>
+<body class="admin-body">
+    <header>
+        <a href="admin.html" style="color:white; text-decoration:none; margin-left:20px;">← Volver al Menú</a>
+        <h2 style="margin:0 auto;">Gestión de Usuarios</h2>
+    </header>
+
+    <main class="admin-container" style="padding: 20px;">
+        <div class="admin-actions-top">
+            <h3>Lista de Usuarios Registrados</h3>
+            <button class="btn-moo" onclick="openUserModal()">+ Agregar Nuevo Usuario</button>
+        </div>
+
+        <table class="admin-table" style="width:100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background: var(--azul-fuerte); color:white;">
+                    <th>Usuario</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Leche</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tablaUsuariosBody"></tbody>
+        </table>
+    </main>
+
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeUserModal()">&times;</span>
+            <h2 id="modalTitle">Nuevo Usuario</h2>
+            <form id="userForm">
+                <input type="hidden" id="editOriginalUsername">
+                <div class="form-group">
+                    <label>Nombre de Usuario</label>
+                    <input type="text" id="userName" required>
+                </div>
+                <div class="form-group">
+                    <label>Nombre Real</label>
+                    <input type="text" id="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label>Correo Electrónico</label>
+                    <input type="email" id="userEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Leche Favorita</label>
+                    <select id="userMilk">
+                        <option value="Entera">Entera</option>
+                        <option value="Deslactosada">Deslactosada</option>
+                        <option value="Almendra">Almendra</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label id="passLabel">Contraseña</label>
+                    <input type="password" id="userPass">
+                </div>
+                <button type="submit" class="btn-moo" style="width:100%">Guardar Usuario</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/seed-data.js"></script>
+    <script src="../js/storage.js"></script>
+    <script>
+        let allUsers = [];
+
+        async function cargarUsuarios() {
+            await MooviesStorage.ensureLocalJsonSeed();
+            allUsers = MooviesStorage.getUsers();
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tablaUsuariosBody');
+            tbody.innerHTML = '';
+            allUsers.forEach(u => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${u.nombreUsuario}</td>
+                    <td>${u.nombre}</td>
+                    <td>${u.email}</td>
+                    <td>${u.lecheFavorita}</td>
+                    <td>
+                        <button onclick="openUserModal('${u.nombreUsuario}')" title="Modificar">✏️</button>
+                        <button onclick="eliminarUser('${u.nombreUsuario}')" title="Eliminar" style="color:red;">🗑️</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function openUserModal(username = null) {
+            const modal = document.getElementById('userModal');
+            const form = document.getElementById('userForm');
+            const title = document.getElementById('modalTitle');
+            form.reset();
+
+            if (username) {
+                title.innerText = "Modificar Usuario";
+                const user = allUsers.find(u => u.nombreUsuario === username);
+                document.getElementById('editOriginalUsername').value = username;
+                document.getElementById('userName').value = user.nombreUsuario;
+                document.getElementById('fullName').value = user.nombre;
+                document.getElementById('userEmail').value = user.email;
+                document.getElementById('userMilk').value = user.lecheFavorita;
+                document.getElementById('passLabel').innerText = "Nueva Contraseña (dejar en blanco para no cambiar)";
+            } else {
+                title.innerText = "Nuevo Usuario";
+                document.getElementById('editOriginalUsername').value = "";
+                document.getElementById('passLabel').innerText = "Contraseña";
+                document.getElementById('userPass').required = true;
+            }
+            modal.style.display = 'block';
+        }
+
+        function closeUserModal() {
+            document.getElementById('userModal').style.display = 'none';
+        }
+
+        document.getElementById('userForm').onsubmit = function(e) {
+            e.preventDefault();
+            const originalUser = document.getElementById('editOriginalUsername').value;
+            const userData = {
+                nombreUsuario: document.getElementById('userName').value,
+                nombre: document.getElementById('fullName').value,
+                email: document.getElementById('userEmail').value,
+                lecheFavorita: document.getElementById('userMilk').value,
+                password: document.getElementById('userPass').value || null
+            };
+
+            if (originalUser) {
+                // Lógica para actualizar (Usando función de storage.js)
+                MooviesStorage.updateAccountForUsername(originalUser, userData);
+            } else {
+                // Lógica para agregar (asumiendo que saveUsers existe en storage.js)
+                allUsers.push({ ...userData, id: 'u_' + Date.now() });
+                MooviesStorage.saveUsers(allUsers);
+            }
+            
+            cargarUsuarios();
+            closeUserModal();
+        };
+
+        function eliminarUser(username) {
+            if(confirm(`¿Seguro que deseas eliminar al usuario ${username}?`)) {
+                allUsers = allUsers.filter(u => u.nombreUsuario !== username);
+                MooviesStorage.saveUsers(allUsers);
+                renderTable();
+            }
+        }
+
+        window.onload = cargarUsuarios;
+    </script>
+</body>
+</html>
