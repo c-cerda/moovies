@@ -272,7 +272,8 @@ window.MOOVIES_SEED = {
   {"id": "u_17", "nombreUsuario": "festival_moo", "nombre": "Festival Moo", "email": "festival@moovies.local", "lecheFavorita": "Deslactosada", "password": "moo123"},
   {"id": "u_18", "nombreUsuario": "rollo_camara", "nombre": "Rollo Cámara", "email": "rollo@moovies.local", "lecheFavorita": "Entera", "password": "moo123"},
   {"id": "u_19", "nombreUsuario": "claqueta_azul", "nombre": "Claqueta Azul", "email": "claqueta@moovies.local", "lecheFavorita": "Almendra", "password": "moo123"},
-  {"id": "u_20", "nombreUsuario": "creditos_finales", "nombre": "Créditos Finales", "email": "creditos@moovies.local", "lecheFavorita": "Entera", "password": "moo123"}
+  {"id": "u_20", "nombreUsuario": "admin", "nombre": "Administrador", "email": "admin", "lecheFavorita": "Entera", "password": "1234", "descripcion": ""},
+  {"id": "u_21", "nombreUsuario": "creditos_finales", "nombre": "Créditos Finales", "email": "creditos@moovies.local", "lecheFavorita": "Entera", "password": "moo123"}
 ]
 ,
   comments: [
