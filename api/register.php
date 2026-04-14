@@ -25,16 +25,41 @@ try {
 		exit;
 	}
 
-	try {
-		$stmt = $db->prepare("CALL register_user(?, ?, ?, ?, ?)");
-		$stmt->execute([$username, $name, $email, $hashedPassword, $milk]);
+	// Check duplicates
+	// # REPLACE 
+	$stmt = $db->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
+	$stmt->execute([$username, $email]);
 
-		echo json_encode(["success" => true]);
-	} catch (PDOException $e) {
-		echo json_encode([
-			"success" => false,
-			"message" => $e->getMessage()
-		]);
+	if ($stmt->fetch()) {
+		echo json_encode(["success" => false, "message" => "Usuario o correo ya existe"]);
+		exit;
+	}
+
+	// Hash password 
+	$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+	// Insert user
+	$stmt = $db->prepare("
+        INSERT INTO users (username, name, email, password)
+        VALUES (?, ?, ?, ?)
+    ");
+	$stmt->execute([$username, $name, $email, $hashedPassword]);
+
+	$user_id = $db->lastInsertId();
+
+	// Handle milk (lookup id)
+	$stmt = $db->prepare("SELECT id FROM milks WHERE type = ?");
+	$stmt->execute([$milk]);
+	$milkRow = $stmt->fetch();
+
+	if ($milkRow) {
+		$milk_id = $milkRow['id'];
+
+		$stmt = $db->prepare("
+            INSERT INTO users_milks (user_id, milk_id)
+            VALUES (?, ?)
+        ");
+		$stmt->execute([$user_id, $milk_id]);
 	}
 
 	echo json_encode(["success" => true]);
@@ -43,4 +68,22 @@ try {
 		"success" => false,
 		"message" => "Error del servidor"
 	]);
+
+
+	// REMPLAZAR CON:
+	/*
+try {
+    $stmt = $db->prepare("CALL register_user(?, ?, ?, ?, ?)");
+    $stmt->execute([$username, $name, $email, $hashedPassword, $milk]);
+
+    echo json_encode(["success" => true]);
+
+} catch (PDOException $e) {
+    echo json_encode([
+        "success" => false,
+        "message" => $e->getMessage()
+    ]);
+}
+
+	*/
 }
