@@ -2100,3 +2100,10 @@ textarea.modal-synopsis-area--above-review {
 	position: relative;
 	cursor: pointer;
 }
+
+.review-card {
+	border: 1px solid #ccc;
+	padding: 10px;
+	margin-bottom: 10px;
+	border-radius: 10px;
+}

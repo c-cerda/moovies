@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>MOOVIES - Perfil</title>
+	<link rel="stylesheet" href="../css/styles.css">
+</head>
+
+<body class="profile-page-body">
+	<header>
+		<a href="catalog.html" class="header-logo">
+			<img src="../images/MOOVIES_icon.png" alt="Logo">
+		</a>
+		<a href="catalog.html" class="profile-back-link">← Volver al catálogo</a>
+	</header>
+
+	<main class="profile-page-main">
+		<p id="profileViewError" class="catalog-error" hidden></p>
+		<div id="profileViewContent" hidden>
+			<h1 class="profile-page-title" id="profileViewHeading">Perfil</h1>
+			<div class="profile-header-block profile-header-block--public">
+				<p><strong>Usuario:</strong> <span id="pvUsername"></span></p>
+				<p><strong>Leche favorita:</strong> <span id="pvLeche"></span></p>
+			</div>
+			<h2 class="profile-section-title">Reseñas</h2>
+			<div id="pvReviews" class="profile-review-cards"></div>
+		</div>
+		<h2 class="profile-section-title">Editar cuenta</h2>
+
+		<div class="profile-header-block">
+			<input type="text" id="editUsername" placeholder="Nuevo username">
+
+			<select id="editMilk">
+				<option value="1">Entera</option>
+				<option value="2">Deslactosada</option>
+				<option value="3">Almendra</option>
+			</select>
+
+			<button onclick="updateProfile()">Guardar cambios</button>
+		</div>
+
+	</main>
+
+
+	<script src="../js/user.js"></script>
+</body>
+
+</html>
