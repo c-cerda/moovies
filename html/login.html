@@ -8,74 +8,69 @@
 </head>
 
 <body>
-    <div class="auth-wrapper">
-        <div class="auth-container">
-            <div class="auth-image">
-                <img src="../images/MOOVIES_LOGO.png" alt="Logo">
-            </div>
-            <div class="auth-form">
-                <h2>Iniciar Sesión</h2>
-                <p id="authMessage" class="auth-message" hidden></p>
-                <form id="loginForm" novalidate>
-                    <input type="text" id="loginEmail" name="loginId" placeholder="Correo o nombre de usuario"
-                        required autocomplete="username" spellcheck="false">
-                    <input type="password" id="loginPassword" name="password"
-                        placeholder="Tu contraseña" required autocomplete="current-password">
-                    <button type="submit" class="btn-moo">Entrar</button>
-                </form>
-                <p style="text-align:center; margin-top:20px;">
-                    ¿Eres nuevo? <a href="register.html"
-                        style="color:var(--azul-fuerte); font-weight:bold;">Regístrate aquí</a>
-                </p>
-            </div>
-        </div>
-    </div>
+	<div class="auth-wrapper">
+		<div class="auth-container">
+			<div class="auth-image">
+				<img src="../images/MOOVIES_LOGO.png" alt="Logo">
+			</div>
+			<div class="auth-form">
+				<h2>Iniciar Sesión</h2>
+				<p id="authMessage" class="auth-message" hidden></p>
+				<form id="loginForm" novalidate>
+					<input type="text" id="loginEmail" name="loginId" placeholder="Correo o nombre de usuario"
+						required autocomplete="username" spellcheck="false">
+					<input type="password" id="loginPassword" name="password"
+						placeholder="Tu contraseña" required autocomplete="current-password">
+					<button type="submit" class="btn-moo">Entrar</button>
+				</form>
+				<p style="text-align:center; margin-top:20px;">
+					¿Eres nuevo? <a href="register.html"
+						style="color:var(--azul-fuerte); font-weight:bold;">Regístrate aquí</a>
+				</p>
+			</div>
+		</div>
+	</div>
 
-    <script src="../js/seed-data.js"></script>
-    <script src="../js/storage.js"></script>
-    <script>
-        (function () {
-            var form = document.getElementById('loginForm');
-            var msg = document.getElementById('authMessage');
+<script src="../js/seed-data.js"></script>
+	<script src="../js/storage.js"></script>
+	<script>
+		(function () {
+			var form = document.getElementById('loginForm');
+			var msg = document.getElementById('authMessage');
 
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
-                msg.hidden = true;
+			form.addEventListener('submit', function (e) {
+				e.preventDefault();
+				msg.hidden = true;
 
-                var loginId = document.getElementById('loginEmail').value.trim();
-                var password = document.getElementById('loginPassword').value;
+				var loginId = document.getElementById('loginEmail').value.trim();
+				var password = document.getElementById('loginPassword').value;
 
-                MooviesStorage.ensureLocalJsonSeed().then(function () {
-                    var users = MooviesStorage.getUsers();
-                    var found = null;
-                    var idLower = loginId.toLowerCase();
+				MooviesStorage.ensureLocalJsonSeed().then(function () {
+					var users = MooviesStorage.getUsers();
+					var found = null;
+					var idLower = String(loginId).toLowerCase();
 
-                    // 1. Buscar el usuario en la base de datos local
-                    for (var i = 0; i < users.length; i++) {
-                        var u = users[i];
-                        var mail = u.email ? String(u.email).toLowerCase() : '';
-                        var nu = u.nombreUsuario ? String(u.nombreUsuario).toLowerCase() : '';
+					for (var i = 0; i < users.length; i++) {
+						var u = users[i];
+						var mail = u.email ? String(u.email).toLowerCase() : '';
+						var nu = u.nombreUsuario ? String(u.nombreUsuario).toLowerCase() : '';
 
-                        if (u.password === password && (idLower === mail || idLower === nu)) {
-                            found = u;
-                            break;
-                        }
-                    }
+						if (u.password === password && (idLower === mail || idLower === nu)) {
+							found = u;
+							break;
+						}
+					}
 
-                    if (found) {
-                        // 2. Guardar la sesión del usuario encontrado
-                        MooviesStorage.setSessionUser({
-                            nombreUsuario: found.nombreUsuario || found.nombre,
-                            nombre: found.nombre || found.nombreUsuario,
-                            email: found.email,
-                        });
+					if (found) {
+						MooviesStorage.setSessionUser({
+							nombreUsuario: found.nombreUsuario || found.nombre,
+							nombre: found.nombre || found.nombreUsuario,
+							email: found.email,
+						});
+						window.location.href = 'catalog.html';
+						return;
+					}
 
-                        // 3. Todos los usuarios, incluido admin, inician en el catálogo.
-                        window.location.href = 'catalog.html';
-                        return;
-                    }
-
-                    // Si no se encuentra el usuario
                     msg.textContent = 'Usuario / correo o contraseña incorrectos';
                     msg.hidden = false;
                 });
