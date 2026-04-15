@@ -50,6 +50,21 @@ function currentSessionUsername() {
     return s && s.nombreUsuario ? s.nombreUsuario : '';
 }
 
+function isAdminSession(session) {
+    session = session || MooviesStorage.getSessionUser();
+    return (
+        session &&
+        session.nombreUsuario &&
+        String(session.nombreUsuario).toLowerCase() === 'admin'
+    );
+}
+
+function openAdminPanel() {
+    if (isAdminSession()) {
+        window.location.href = 'admin.html';
+    }
+}
+
 function getFilteredMovies() {
     const q = (document.getElementById('searchMovies') && document.getElementById('searchMovies').value) || '';
     const g = (document.getElementById('filterGenre') && document.getElementById('filterGenre').value) || '';
@@ -599,6 +614,12 @@ function fillProfileModal() {
     set('profileDisplayName', rec.nombre || rec.nombreUsuario);
     set('profileUsername', rec.nombreUsuario);
     set('profileLeche', rec.lecheFavorita || '—');
+    const adminBtn = document.getElementById('adminPanelButton');
+    if (adminBtn) {
+        const isAdmin = String(rec.nombreUsuario).toLowerCase() === 'admin';
+        adminBtn.hidden = !isAdmin;
+        adminBtn.disabled = !isAdmin;
+    }
     const ta = document.getElementById('profileDescripcion');
     if (ta) ta.value = rec.descripcion != null ? rec.descripcion : '';
     renderProfileMyReviews();

@@ -255,6 +255,23 @@
         return users[idx];
     }
 
+    function updateUserDescripcion(nombreUsuario, descripcion) {
+        if (!nombreUsuario) throw new Error('Usuario inválido');
+        var users = getUsers();
+        var want = String(nombreUsuario).toLowerCase();
+        var idx = -1;
+        for (var i = 0; i < users.length; i++) {
+            if (users[i].nombreUsuario && String(users[i].nombreUsuario).toLowerCase() === want) {
+                idx = i;
+                break;
+            }
+        }
+        if (idx < 0) throw new Error('Usuario no encontrado');
+        users[idx].descripcion = descripcion != null ? String(descripcion) : '';
+        saveUsers(users);
+        return users[idx];
+    }
+
     function ensureLocalJsonSeed() {
         return new Promise(function (resolve) {
             var seed = global.MOOVIES_SEED || {};
@@ -375,6 +392,7 @@
         getDisplayNameForUsuario: getDisplayNameForUsuario,
         getUserRecordByUsername: getUserRecordByUsername,
         updateAccountForUsername: updateAccountForUsername,
+        updateUserDescripcion: updateUserDescripcion,
         toggleCommentVote: toggleCommentVote,
         getFavoritesForUser: getFavoritesForUser,
         setFavoritesForUser: setFavoritesForUser,

@@ -70,13 +70,8 @@
                             email: found.email,
                         });
 
-                        // 3. Lógica de redirección diferenciada
-                        // Verificamos si es el administrador (ajusta 'admin' por el nombre real de tu usuario admin)
-                        if (found.nombreUsuario.toLowerCase() === 'admin' || found.email.toLowerCase() === 'admin@moovies.com') {
-                            window.location.href = 'admin.html';
-                        } else {
-                            window.location.href = 'catalog.html';
-                        }
+                        // 3. Todos los usuarios, incluido admin, inician en el catálogo.
+                        window.location.href = 'catalog.html';
                         return;
                     }
 
