@@ -57,74 +57,70 @@
     <script src="../js/seed-data.js"></script>
     <script src="../js/storage.js"></script>
     <script>
-        let allComments = [];
-        let allMovies = [];
+   let allComments = [];
 
-        // Función para obtener el título de la película por su ID
-        function getMovieTitle(id) {
-            const movie = allMovies.find(m => String(m.id) === String(id));
-            return movie ? movie.titulo : `ID: ${id} (No encontrada)`;
+async function inicializarAdmin() {
+    await cargarComentarios();
+
+    // Buscador en tiempo real
+    document.getElementById('adminCommentSearch').addEventListener('input', function(e) {
+        const term = e.target.value.toLowerCase();
+        const filtered = allComments.filter(c => 
+            c.movie_title.toLowerCase().includes(term) || 
+            c.username.toLowerCase().includes(term)
+        );
+        renderTable(filtered);
+    });
+}
+
+async function cargarComentarios() {
+    const res = await fetch('../api/list_comments.php');
+    allComments = await res.json();
+    renderTable(allComments);
+}
+
+function renderTable(data) {
+    const tbody = document.getElementById('tablaComentariosBody');
+    const noResults = document.getElementById('noResultsMsg');
+    tbody.innerHTML = '';
+
+    if (data.length === 0) {
+        noResults.style.display = 'block';
+        return;
+    }
+    noResults.style.display = 'none';
+
+    data.forEach(c => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td style="font-weight:bold; color:var(--azul-fuerte);">${c.username}</td>
+            <td style="color:#555;">${c.movie_title}</td>
+            <td style="max-width:300px; font-style:italic;">"${c.comment}"</td>
+            <td style="text-align:center; font-size: 1.2rem;">
+                ${'🥛'.repeat(c.rating)}${'<span style="opacity:0.2">🥛</span>'.repeat(5 - c.rating)}
+            </td>
+            <td>
+                <button class="btn-moo" style="background:#cc0000; border:none; cursor:pointer;" 
+                        onclick="eliminarComentario(${c.id})">Eliminar</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+async function eliminarComentario(id) {
+    if(confirm('¿Eliminar este comentario permanentemente?')) {
+        const res = await fetch(`../api/delete_comment.php?id=${id}`, { method: 'GET' });
+        const result = await res.json();
+        if(result.success) {
+            cargarComentarios();
+        } else {
+            alert("Error al eliminar");
         }
+    }
+}
 
-        async function inicializarAdmin() {
-            await MooviesStorage.ensureLocalJsonSeed();
-            
-            // Cargar datos
-            allComments = MooviesStorage.getComments();
-            // Intentar obtener pelis de storage, si no, del seed global
-            allMovies = MooviesStorage.getMovies ? MooviesStorage.getMovies() : window.MOOVIES_SEED.movies;
-
-            renderTable(allComments);
-
-            // Escuchar el evento de búsqueda
-            document.getElementById('adminCommentSearch').addEventListener('input', function(e) {
-                const term = e.target.value.toLowerCase();
-                const filtered = allComments.filter(c => {
-                    const movieTitle = getMovieTitle(c.peliculaId).toLowerCase();
-                    const userName = c.usuario.toLowerCase();
-                    return movieTitle.includes(term) || userName.includes(term);
-                });
-                renderTable(filtered);
-            });
-        }
-
-        function renderTable(data) {
-            const tbody = document.getElementById('tablaComentariosBody');
-            const noResults = document.getElementById('noResultsMsg');
-            tbody.innerHTML = '';
-
-            if (data.length === 0) {
-                noResults.style.display = 'block';
-                return;
-            }
-            noResults.style.display = 'none';
-
-            data.forEach(c => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td style="font-weight:bold; color:var(--azul-fuerte);">${c.usuario}</td>
-                    <td style="color:#555;">${getMovieTitle(c.peliculaId)}</td>
-                    <td style="max-width:300px; font-style:italic;">"${c.comentario}"</td>
-                    <td style="text-align:center;">${'🥛'.repeat(c.vasosLeche)}</td>
-                    <td>
-                        <button class="btn-moo" style="background:#cc0000; padding:5px 10px; font-size:0.8rem;" 
-                                onclick="eliminarComentario('${c.id}')">Eliminar</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function eliminarComentario(id) {
-            if(confirm('¿Estás seguro de que deseas eliminar este comentario? Esta acción no se puede deshacer.')) {
-                MooviesStorage.deleteCommentById(id);
-                // Actualizar lista local y volver a renderizar
-                allComments = MooviesStorage.getComments();
-                renderTable(allComments);
-            }
-        }
-
-        window.onload = inicializarAdmin;
+window.onload = inicializarAdmin;
     </script>
 </body>
 </html>

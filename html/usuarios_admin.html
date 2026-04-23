@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Admin - Usuarios</title>
+    <title>Admin - Gestión de Usuarios</title>
     <link rel="stylesheet" href="../css/styles.css">
     <style>
         .admin-actions-top {
@@ -11,16 +11,51 @@
             align-items: center;
             margin: 20px 0;
         }
-        /* Estilos para el modal reutilizados de tu diseño */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
-        .modal-content { background-color: white; margin: 5% auto; padding: 20px; border-radius: 10px; width: 400px; position: relative; }
-        .close-btn { position: absolute; right: 20px; top: 10px; cursor: pointer; font-size: 24px; }
+        /* Estilos del Modal */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.6); 
+            backdrop-filter: blur(3px);
+        }
+        .modal-content { 
+            background-color: white; 
+            margin: 5% auto; 
+            padding: 30px; 
+            border-radius: 12px; 
+            width: 400px; 
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .close-btn { 
+            position: absolute; 
+            right: 20px; 
+            top: 15px; 
+            cursor: pointer; 
+            font-size: 28px; 
+            color: #666;
+        }
+        .close-btn:hover { color: #000; }
+        
         .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
-        .form-group input, .form-group select { width: 100%; padding: 8px; box-sizing: border-box; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--azul-fuerte); }
+        .form-group input, .form-group select { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 6px; 
+            box-sizing: border-box; 
+        }
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
     </style>
 </head>
 <body class="admin-body">
+
     <header>
         <a href="admin.html" style="color:white; text-decoration:none; margin-left:20px;">← Volver al Menú</a>
         <h2 style="margin:0 auto;">Gestión de Usuarios</h2>
@@ -28,41 +63,47 @@
 
     <main class="admin-container" style="padding: 20px;">
         <div class="admin-actions-top">
-            <h3>Lista de Usuarios Registrados</h3>
+            <h3>Usuarios en la Base de Datos</h3>
             <button class="btn-moo" onclick="openUserModal()">+ Agregar Nuevo Usuario</button>
         </div>
 
-        <table class="admin-table" style="width:100%; border-collapse: collapse;">
-            <thead>
-                <tr style="background: var(--azul-fuerte); color:white;">
-                    <th>Usuario</th>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>Leche</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="tablaUsuariosBody"></tbody>
-        </table>
+        <section class="admin-table-wrapper">
+            <table class="admin-table" style="width:100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: var(--azul-fuerte); color:white;">
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Leche</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaUsuariosBody">
+                    </tbody>
+            </table>
+        </section>
     </main>
 
     <div id="userModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeUserModal()">&times;</span>
             <h2 id="modalTitle">Nuevo Usuario</h2>
+            
             <form id="userForm">
-                <input type="hidden" id="editOriginalUsername">
+                <input type="hidden" id="editUserId">
+                
                 <div class="form-group">
                     <label>Nombre de Usuario</label>
-                    <input type="text" id="userName" required>
+                    <input type="text" id="userName" required placeholder="Ej: Angel_caotick">
                 </div>
                 <div class="form-group">
                     <label>Nombre Real</label>
-                    <input type="text" id="fullName" required>
+                    <input type="text" id="fullName" required placeholder="Nombre completo">
                 </div>
                 <div class="form-group">
                     <label>Correo Electrónico</label>
-                    <input type="email" id="userEmail" required>
+                    <input type="email" id="userEmail" required placeholder="correo@ejemplo.com">
                 </div>
                 <div class="form-group">
                     <label>Leche Favorita</label>
@@ -70,108 +111,125 @@
                         <option value="Entera">Entera</option>
                         <option value="Deslactosada">Deslactosada</option>
                         <option value="Almendra">Almendra</option>
+                        <option value="Soya">Soya</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label id="passLabel">Contraseña</label>
                     <input type="password" id="userPass">
                 </div>
-                <button type="submit" class="btn-moo" style="width:100%">Guardar Usuario</button>
+
+                <div class="btn-group">
+                    <button type="button" onclick="closeUserModal()" style="background:#ccc; border:none; padding:10px; border-radius:5px; cursor:pointer; flex:1;">Cancelar</button>
+                    <button type="submit" class="btn-moo" style="flex:2;">Guardar Usuario</button>
+                </div>
             </form>
         </div>
     </div>
 
-    <script src="../js/seed-data.js"></script>
-    <script src="../js/storage.js"></script>
     <script>
-        let allUsers = [];
 
-        async function cargarUsuarios() {
-            await MooviesStorage.ensureLocalJsonSeed();
-            allUsers = MooviesStorage.getUsers();
+    let allUsers = [];
+
+    async function cargarUsuarios() {
+        try {
+            const res = await fetch('../api/list_users.php');
+            allUsers = await res.json();
             renderTable();
+        } catch (error) {
+            console.error("Error cargando usuarios:", error);
         }
+    }
 
-        function renderTable() {
-            const tbody = document.getElementById('tablaUsuariosBody');
-            tbody.innerHTML = '';
-            allUsers.forEach(u => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${u.nombreUsuario}</td>
-                    <td>${u.nombre}</td>
-                    <td>${u.email}</td>
-                    <td>${u.lecheFavorita}</td>
-                    <td>
-                        <button onclick="openUserModal('${u.nombreUsuario}')" title="Modificar">✏️</button>
-                        <button onclick="eliminarUser('${u.nombreUsuario}')" title="Eliminar" style="color:red;">🗑️</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
+    function renderTable() {
+        const tbody = document.getElementById('tablaUsuariosBody');
+        tbody.innerHTML = '';
+        allUsers.forEach(u => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="text-align:center; color:#888;">${u.id}</td>
+                <td style="font-weight:bold;">${u.username}</td>
+                <td>${u.name}</td>
+                <td>${u.email}</td>
+                <td>${u.milk_type || 'No elegida'}</td>
+                <td style="text-align:center;">
+                    <button onclick="openUserModal(${u.id})" style="border:none; background:none; cursor:pointer; font-size:1.2rem;">✏️</button>
+                    <button onclick="eliminarUser(${u.id}, '${u.username}')" style="border:none; background:none; cursor:pointer; font-size:1.2rem; color:red;">🗑️</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function openUserModal(id = null) {
+        const modal = document.getElementById('userModal');
+        const form = document.getElementById('userForm');
+        document.getElementById('modalTitle').innerText = id ? "Modificar Usuario" : "Nuevo Usuario";
+        form.reset();
+        
+        if (id) {
+            const user = allUsers.find(u => u.id == id);
+            document.getElementById('editUserId').value = id;
+            document.getElementById('userName').value = user.username;
+            document.getElementById('fullName').value = user.name;
+            document.getElementById('userEmail').value = user.email;
+            document.getElementById('userMilk').value = user.milk_type || 'Entera';
+            document.getElementById('userPass').required = false;
+        } else {
+            document.getElementById('editUserId').value = "";
+            document.getElementById('userPass').required = true;
         }
+        modal.style.display = 'block';
+    }
 
-        function openUserModal(username = null) {
-            const modal = document.getElementById('userModal');
-            const form = document.getElementById('userForm');
-            const title = document.getElementById('modalTitle');
-            form.reset();
+    function closeUserModal() {
+        document.getElementById('userModal').style.display = 'none';
+    }
 
-            if (username) {
-                title.innerText = "Modificar Usuario";
-                const user = allUsers.find(u => u.nombreUsuario === username);
-                document.getElementById('editOriginalUsername').value = username;
-                document.getElementById('userName').value = user.nombreUsuario;
-                document.getElementById('fullName').value = user.nombre;
-                document.getElementById('userEmail').value = user.email;
-                document.getElementById('userMilk').value = user.lecheFavorita;
-                document.getElementById('passLabel').innerText = "Nueva Contraseña (dejar en blanco para no cambiar)";
+    document.getElementById('userForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const id = document.getElementById('editUserId').value;
+        const formData = new FormData();
+        
+        if(id) formData.append('id', id);
+        formData.append('username', document.getElementById('userName').value);
+        formData.append('name', document.getElementById('fullName').value);
+        formData.append('email', document.getElementById('userEmail').value);
+        formData.append('password', document.getElementById('userPass').value);
+        formData.append('milk_type', document.getElementById('userMilk').value);
+
+        // Si existe ID usa update, si no usa save
+        const url = id ? '../api/update_user.php' : '../api/save_user.php';
+        
+        try {
+            const res = await fetch(url, { method: 'POST', body: formData });
+            const texto = await res.text(); // Leemos como texto primero para depurar
+            const resultado = JSON.parse(texto);
+
+            if (resultado.success) {
+                closeUserModal();
+                cargarUsuarios();
             } else {
-                title.innerText = "Nuevo Usuario";
-                document.getElementById('editOriginalUsername').value = "";
-                document.getElementById('passLabel').innerText = "Contraseña";
-                document.getElementById('userPass').required = true;
+                alert("Error: " + (resultado.error || resultado.message));
             }
-            modal.style.display = 'block';
+        } catch (err) {
+            console.error("Fallo en la petición:", err);
+            alert("Error de conexión con el servidor. Revisa la consola (F12).");
         }
+    };
 
-        function closeUserModal() {
-            document.getElementById('userModal').style.display = 'none';
+    async function eliminarUser(id, username) {
+        if(confirm(`¿Eliminar a "${username}"?`)) {
+            try {
+                const res = await fetch(`../api/delete_user.php?id=${id}`);
+                const resJ = await res.json();
+                if(resJ.success) cargarUsuarios();
+            } catch (err) { alert("Error al eliminar"); }
         }
+    }
 
-        document.getElementById('userForm').onsubmit = function(e) {
-            e.preventDefault();
-            const originalUser = document.getElementById('editOriginalUsername').value;
-            const userData = {
-                nombreUsuario: document.getElementById('userName').value,
-                nombre: document.getElementById('fullName').value,
-                email: document.getElementById('userEmail').value,
-                lecheFavorita: document.getElementById('userMilk').value,
-                password: document.getElementById('userPass').value || null
-            };
-
-            if (originalUser) {
-                // Lógica para actualizar (Usando función de storage.js)
-                MooviesStorage.updateAccountForUsername(originalUser, userData);
-            } else {
-                // Lógica para agregar (asumiendo que saveUsers existe en storage.js)
-                allUsers.push({ ...userData, id: 'u_' + Date.now() });
-                MooviesStorage.saveUsers(allUsers);
-            }
-            
-            cargarUsuarios();
-            closeUserModal();
-        };
-
-        function eliminarUser(username) {
-            if(confirm(`¿Seguro que deseas eliminar al usuario ${username}?`)) {
-                allUsers = allUsers.filter(u => u.nombreUsuario !== username);
-                MooviesStorage.saveUsers(allUsers);
-                renderTable();
-            }
-        }
-
-        window.onload = cargarUsuarios;
+    window.onload = cargarUsuarios;
+    window.onclick = (e) => { if (e.target == document.getElementById('userModal')) closeUserModal(); };
     </script>
 </body>
 </html>
